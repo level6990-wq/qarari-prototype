@@ -71,7 +71,7 @@ label.fld{display:block; margin:20px 0 8px; font-weight:800; font-size:1.02rem}
       أجاوبك كمستشار أكاديمي: تخصص واحد أنسب لك، سبب الترشيح بصراحة،
       وخطوتك الجاية — من مصادر جامعة الكويت الرسمية.
     </p>
-    <button class="btn btn-primary btn-block" style="max-width:380px; margin:0 auto" onclick="go('s-form');showStep(1)">
+    <button class="btn btn-primary btn-block" style="max-width:380px; margin:0 auto" onclick="startJourney()">
       ابدأ — دقيقتين تقريبًا ←
     </button>
     <p class="foot">بيانات الأهلية من المصادر الرسمية لجامعة الكويت · آخر تحقق: 26 يوليو 2026<br>قراري © 2026 · صُنع في الكويت 🇰🇼</p>
@@ -81,7 +81,7 @@ label.fld{display:block; margin:20px 0 8px; font-weight:800; font-size:1.02rem}
 <!-- ═══════ النموذج (خطوتان) ═══════ -->
 <section id="s-form" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="go('s-welcome')">← رجوع</button></div>
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="QA.track('journey_abandon',{at:'step'+step,via:'top_back'});go('s-welcome')">← رجوع</button></div>
     <div class="progress"><div id="formbar" style="width:50%"></div></div>
 
     <!-- خطوة 1: الأرقام -->
@@ -278,6 +278,29 @@ const PROGRAMS = [
 const S = { pct:null, branch:null, eng:null, math:null, arb:null, interests:[], life:[] };
 let step = 1, RESULTS = [];
 
+/* ═══ التحليلات الداخلية — بدون خادم: تُحفظ محليًا على جهاز المستخدم فقط (localStorage)
+   الأحداث: journey_start · step_complete · journey_abandon · journey_complete · result_view · source_click · share
+   للاطلاع أثناء الاختبار: QA.dump() من وحدة تحكم المتصفح، أو localStorage['qarari_events_v1'] ═══ */
+const QA = {
+  KEY: 'qarari_events_v1',
+  log: [],
+  init(){ try{ QA.log = JSON.parse(localStorage.getItem(QA.KEY)||'[]'); }catch(_){ QA.log = []; } },
+  track(event, data){
+    const e = { event, data: data||{}, ts: new Date().toISOString(),
+      screen: (document.querySelector('.screen.active')||{}).id || null };
+    QA.log.push(e);
+    try{ localStorage.setItem(QA.KEY, JSON.stringify(QA.log.slice(-500))); }catch(_){}
+    if(window.console && console.debug) console.debug('[QA]', e);
+  },
+  dump(){ return QA.log; }
+};
+QA.init();
+function startJourney(){ QA.track('journey_start'); go('s-form'); showStep(1); }
+window.addEventListener('beforeunload', function(){
+  if(document.getElementById('s-form').classList.contains('active'))
+    QA.track('journey_abandon', { at:'step'+step, via:'page_unload' });
+});
+
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -302,7 +325,11 @@ function pickMany(el){
   const i = arr.indexOf(v); i>=0 ? arr.splice(i,1) : arr.push(v);
 }
 function formNav(dir){
-  if(dir===-1){ step===1 ? go('s-welcome') : showStep(1); return; }
+  if(dir===-1){
+    if(step===1){ QA.track('journey_abandon',{at:'step1',via:'back_button'}); go('s-welcome'); }
+    else showStep(1);
+    return;
+  }
   if(step===1){
     const pct = parseFloat(document.getElementById('in-pct').value);
     if(!pct || pct<50 || pct>100){ alert('أدخل نسبتك بين 50 و 100'); return; }
@@ -310,9 +337,11 @@ function formNav(dir){
     S.pct = pct;
     const g = id => { const v = parseFloat(document.getElementById(id).value); return (v>=0&&v<=100)?v:null; };
     S.eng = g('in-eng'); S.math = g('in-math'); S.arb = g('in-arb');
+    QA.track('step_complete',{step:1});
     showStep(2); return;
   }
   if(S.interests.length===0){ alert('اختر مجالًا واحدًا على الأقل يشدك'); return; }
+  QA.track('journey_complete',{ branch:S.branch, scores_provided:(S.eng!==null||S.math!==null||S.arb!==null), interests_count:S.interests.length });
   computeResults(); renderResult(); go('s-result');
 }
 
@@ -376,13 +405,14 @@ function buildChangers(r){
   if(r.p.weights) items.push('<strong>درجات القدرات:</strong> الجامعة تسمح بثلاث محاولات في السنة وتحتسب أعلى نتيجة — تحسين درجتك يرفع معدلك المكافئ وقد يفتح لك كليات أعلى.');
   items.push('<strong>تغيّر اهتماماتك:</strong> التوصية مبنية على إجاباتك اليوم. لو اكتشفت ميلًا جديدًا خلال الصيف، أعد التقييم — الميول تتضح بالتجربة.');
   items.push('<strong>تحسّن أو انخفاض مستواك الدراسي:</strong> نسبة الثانوية النهائية هي المدخل الرسمي الأول لأي كلية.');
-  items.push('<strong>تغيّر هدفك المهني:</strong> لو تبدلت أولويتك (تخصص تحبه ↔ قبول مضمون ↔ وظيفة أسرع) فالترتيب الصحيح لرغباتك يتغير معها.');
+  items.push('<strong>تغيّر هدفك المهني:</strong> لو تبدلت أولويتك (تخصص تحبه ↔ أولوية القبول ↔ وظيفة أسرع) فالترتيب الصحيح لرغباتك يتغير معها.');
   items.push('<strong>تحديث الشروط الرسمية:</strong> أوزان 2026/2027 لم تُنشر بعد؛ نعتمد جدول 2025/2026 الموثق وقد يُحدَّث — راجع المصدر الرسمي قبل التقديم.');
   return items;
 }
 function renderResult(){
   const top = RESULTS[0], alts = RESULTS.slice(1,3);
   const p = top.p;
+  QA.track('result_view',{ recommended:p.id, college:p.college, fit:top.fit, eligibility:top.ev.st, adjusted_rate:top.adj });
   // العد التنازلي للتقديم
   const now = new Date(), diff = APPLY_CLOSE - now;
   let dbox;
@@ -414,7 +444,7 @@ function renderResult(){
     '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>عند السؤال:</strong> راسل عمادة القبول والتسجيل admission@ku.edu.kw (موثق في الدليل الرسمي).</p></div>';
 
   document.getElementById('r-sources').innerHTML = [SRC.portal, SRC.news, SRC.weights, SRC.rules]
-    .map(s=>'<a class="src-link" href="'+s.url+'" target="_blank" rel="noopener"><span>🔗</span><span>'+s.label+'</span><span class="arrow">↗</span></a>').join('');
+    .map(s=>'<a class="src-link" href="'+s.url+'" target="_blank" rel="noopener" onclick="QA.track(\'source_click\',{source:\''+s.label+'\'})"><span>🔗</span><span>'+s.label+'</span><span class="arrow">↗</span></a>').join('');
 
   document.getElementById('r-alts').innerHTML = alts.map(r=>
     '<div class="alt-row"><div><strong>'+r.p.name+'</strong><br><span class="muted" style="font-size:.82rem">'+r.p.college+'</span></div>'+
