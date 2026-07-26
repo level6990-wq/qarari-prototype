@@ -281,9 +281,11 @@ table.admin th{color:var(--muted); font-weight:700}
     <div id="admin-gate">
       <div class="card" style="max-width:420px; margin:60px auto; text-align:center">
         <h3 style="margin-bottom:14px">🔐 منطقة الإدارة</h3>
-        <input type="password" id="admin-pass" placeholder="كلمة المرور" style="width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg2); color:var(--ink); font-family:inherit; font-size:1rem; margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()">
+        <p class="muted" style="margin-bottom:14px; font-size:.85rem">دخول آمن عبر حساب الإدارة (Supabase Auth)</p>
+        <input type="email" id="admin-email" placeholder="البريد الإلكتروني" autocomplete="username" style="width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg2); color:var(--ink); font-family:inherit; font-size:1rem; margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()">
+        <input type="password" id="admin-pass" placeholder="كلمة المرور" autocomplete="current-password" style="width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg2); color:var(--ink); font-family:inherit; font-size:1rem; margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()">
         <button class="btn btn-primary btn-block" onclick="adminLogin()">دخول</button>
-        <p id="admin-err" style="display:none; color:var(--red); margin-top:10px; font-weight:700">كلمة المرور غير صحيحة</p>
+        <p id="admin-err" style="display:none; color:var(--red); margin-top:10px; font-weight:700"></p>
       </div>
     </div>
     <div id="admin-body" style="display:none">
@@ -296,6 +298,7 @@ table.admin th{color:var(--muted); font-weight:700}
       <div class="card"><h3 style="margin-bottom:10px">هل وضحت لك الصورة؟</h3><table class="admin" id="admin-feedback"></table></div>
       <div class="card"><h3 style="margin-bottom:10px">شلون عرفوا عن قراري؟</h3><table class="admin" id="admin-acq"></table></div>
       <button class="btn btn-ghost btn-block" onclick="loadAdmin()">↻ تحديث البيانات</button>
+      <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="adminLogout()">تسجيل الخروج من الإدارة</button>
     </div>
   </div>
 </section>
@@ -398,11 +401,24 @@ function setStatus(el, v){
    • لا تُرسل درجات الطالب ولا اختياراته التفصيلية — نوع الحدث فقط
    ════════════════════════════════════════════════════════════ */
 const CFG = {
-  GA_MEASUREMENT_ID: '',        // ← ضع معرف GA4 هنا (مثل G-XXXXXXX) لتفعيل قياس الزوار
-  SUPABASE_URL: '',             // ← مثل https://abcdefgh.supabase.co
-  SUPABASE_ANON_KEY: '',        // ← مفتاح anon public من مشروع Supabase
-  ADMIN_PASS: 'qarari-2026'     // ← غيّر كلمة مرور لوحة الإدارة
+  GA_MEASUREMENT_ID: '',        // ← معرف GA4 (مثل G-XXXXXXX) — قيمة عامة غير سرية بطبيعتها
+  SUPABASE_URL: '',             // ← مثل https://abcdefgh.supabase.co — من Project Settings → API
+  SUPABASE_ANON_KEY: '',        // ← مفتاح anon public فقط (آمن للنشر مع RLS). ممنوع منعًا باتًا وضع service_role هنا
 };
+
+/* عميل Supabase — يُحمّل من CDN فقط عند توفر الإعدادات.
+   anon key + سياسات RLS = آمن للنشر. لا يوجد أي مفتاح آخر في هذا الملف. */
+let sb = null;
+function sbInit(){
+  if(sb || !CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY) return;
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  s.onload = function(){
+    sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+    tryAdminSession();
+  };
+  document.head.appendChild(s);
+}
 
 const QA = {
   KEY: 'qarari_events_v1',
@@ -423,6 +439,7 @@ const QA = {
     // إظهار شريط الموافقة لأول مرة
     if(!this.consent()) document.getElementById('consent-bar').classList.add('show');
     this.loadGA();
+    sbInit();
   },
   track(event, data){
     if(this.consent()!=='granted') return;      // لا موافقة = لا جمع إطلاقًا
@@ -531,33 +548,67 @@ function sendFeedback(answer){
   document.querySelectorAll('#feedback-card .chip').forEach(function(c){ c.disabled = true; c.style.opacity = .45; });
 }
 
-/* ─── لوحة الإدارة ─── */
-function adminLogin(){
-  const v = document.getElementById('admin-pass').value;
-  if(v !== CFG.ADMIN_PASS){ document.getElementById('admin-err').style.display='block'; return; }
+/* ─── لوحة الإدارة — دخول عبر Supabase Auth (لا توجد كلمة مرور داخل هذا الملف) ─── */
+function adminErr(msg){
+  const err = document.getElementById('admin-err');
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+function showAdminBody(){
   document.getElementById('admin-err').style.display='none';
   document.getElementById('admin-gate').style.display='none';
   document.getElementById('admin-body').style.display='block';
   loadAdmin();
 }
+async function tryAdminSession(){
+  if(!sb || location.hash !== '#admin') return;
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    if(session) showAdminBody();
+  }catch(_){}
+}
+async function adminLogin(){
+  if(!sb){
+    adminErr('لوحة الإدارة تحتاج إعداد Supabase أولًا — راجع ملف analytics-setup-guide.md');
+    return;
+  }
+  const email = document.getElementById('admin-email').value.trim();
+  const pass  = document.getElementById('admin-pass').value;
+  if(!email || !pass){ adminErr('أدخل البريد الإلكتروني وكلمة المرور'); return; }
+  const { error } = await sb.auth.signInWithPassword({ email: email, password: pass });
+  if(error){ adminErr('بيانات الدخول غير صحيحة'); return; }
+  showAdminBody();
+}
+async function adminLogout(){
+  if(sb){ try{ await sb.auth.signOut(); }catch(_){}}
+  document.getElementById('admin-body').style.display='none';
+  document.getElementById('admin-gate').style.display='block';
+  document.getElementById('admin-pass').value='';
+}
 async function loadAdmin(){
   const st = document.getElementById('admin-status');
-  if(!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY){
-    st.innerHTML = '⚠️ Supabase غير مفعّل بعد — أضف SUPABASE_URL و SUPABASE_ANON_KEY في إعدادات الملف. البيانات حاليًا محلية على كل جهاز فقط.';
+  if(!sb){
+    st.innerHTML = '⚠️ Supabase غير مفعّل بعد — البيانات المعروضة محلية من هذا الجهاز فقط. للتفعيل راجع ملف analytics-setup-guide.md';
     renderAdmin(QA.log, 'محلي (هذا الجهاز فقط)');
     return;
   }
-  st.textContent = 'جاري الجلب من القاعدة المركزية…';
-  try{
-    const r = await fetch(CFG.SUPABASE_URL + '/rest/v1/events?select=event,data,session_id,ts&order=ts.desc&limit=5000',
-      { headers:{ 'apikey':CFG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+CFG.SUPABASE_ANON_KEY } });
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const rows = await r.json();
-    st.textContent = 'مصدر البيانات: القاعدة المركزية · آخر تحديث الآن · عدد السجلات: ' + rows.length;
-    renderAdmin(rows, 'مركزي');
-  }catch(err){
-    st.innerHTML = '⚠️ تعذر الجلب من القاعدة المركزية (' + err.message + ') — تحقق من المفاتيح وسياسات RLS.';
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session){
+    st.textContent = 'سجّل دخولك بحساب الإدارة لعرض البيانات المركزية.';
+    return;
   }
+  st.textContent = 'جاري الجلب من القاعدة المركزية…';
+  const { data: rows, error } = await sb
+    .from('events')
+    .select('event,data,session_id,ts')
+    .order('ts', { ascending: false })
+    .limit(5000);
+  if(error){
+    st.innerHTML = '⚠️ تعذر الجلب من القاعدة المركزية (' + error.message + ') — تحقق من سياسات RLS (القراءة للمستخدمين المسجلين فقط).';
+    return;
+  }
+  st.textContent = 'مصدر البيانات: القاعدة المركزية · آخر تحديث الآن · عدد السجلات: ' + rows.length;
+  renderAdmin(rows, 'مركزي');
 }
 function renderAdmin(rows, mode){
   const by = function(ev){ return rows.filter(function(r){return r.event===ev}); };
