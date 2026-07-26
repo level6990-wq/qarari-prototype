@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قراري — مستشارك الأكاديمي</title>
+<title>قراري — قبل لا تقدم… ادخل قراري</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1220'/%3E%3Ctext x='32' y='44' font-size='36' font-family='sans-serif' font-weight='900' text-anchor='middle' fill='%234f7cff'%3E%D9%82%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -90,15 +91,15 @@ table.admin th{color:var(--muted); font-weight:700}
 <section id="s-welcome" class="screen active">
   <div class="wrap" style="text-align:center; padding-top:56px">
     <div class="logo" style="font-size:1.9rem">قرار<span>ي</span></div>
-    <h1 style="font-size:1.9rem; margin:26px 0 12px">خلّنا نلقى لك التخصص الصح،<br>بخطوتين بس</h1>
+    <h1 style="font-size:1.9rem; margin:26px 0 12px">نضيّق خياراتك،<br>ونوضح لك الخطوة الجاية</h1>
     <p class="muted" style="max-width:480px; margin:0 auto 34px; font-size:1.05rem">
-      أجاوبك كمستشار أكاديمي: تخصص واحد أنسب لك، سبب الترشيح بصراحة،
-      وخطوتك الجاية — من مصادر جامعة الكويت الرسمية.
+      جاوب على كم سؤال، ونقارن إجاباتك بشروط القبول والمصادر الرسمية.
     </p>
     <button class="btn btn-primary btn-block" style="max-width:380px; margin:0 auto" onclick="startJourney()">
-      ابدأ — دقيقتين تقريبًا ←
+      ابدأ تقييمك المجاني ←
     </button>
-    <p class="foot">بيانات الأهلية من المصادر الرسمية لجامعة الكويت · آخر تحقق: 26 يوليو 2026<br>قراري © 2026 · صُنع في الكويت 🇰🇼</p>
+    <p style="color:var(--green); font-size:.85rem; font-weight:700; margin-top:16px">🔒 كل معلومة مرتبطة بمصدر رسمي وتاريخ آخر تحقق</p>
+    <p class="foot">قراري © 2026 · صُنع في الكويت 🇰🇼 · قبل لا تقدم… ادخل قراري</p>
   </div>
 </section>
 
@@ -112,6 +113,12 @@ table.admin th{color:var(--muted); font-weight:700}
     <div id="fstep1">
       <h2>أرقامك أولًا 🧮</h2>
       <p class="muted">هذي تحدد أهليتك الرسمية — جاوب بدقة، النتيجة لك وحدك.</p>
+      <label class="fld">حالتك الحين</label>
+      <div class="chips">
+        <button class="chip" onclick="setStatus(this,'ثاني عشر')">في ثاني عشر 📚</button>
+        <button class="chip" onclick="setStatus(this,'خريج هالسنة')">خريج هالسنة 🎓</button>
+        <button class="chip" onclick="setStatus(this,'خريج سابق')">خريج سنة سابقة 🗂️</button>
+      </div>
       <label class="fld">نسبتك في الثانوية ٪</label>
       <input type="number" id="in-pct" min="50" max="100" step="0.1" placeholder="مثال: 87.5" inputmode="decimal">
       <label class="fld">فرعك</label>
@@ -125,12 +132,12 @@ table.admin th{color:var(--muted); font-weight:700}
         <input type="number" id="in-math" min="0" max="100" placeholder="رياضيات" inputmode="decimal">
         <input type="number" id="in-arb" min="0" max="100" placeholder="عربي" inputmode="decimal">
       </div>
-      <p class="muted" style="font-size:.82rem; margin-top:8px">تركها فاضية ما يمنع الترشيح — بس الأهلية بتطلع «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.</p>
+      <p class="muted" style="font-size:.82rem; margin-top:8px">تركها فاضية ما يمنع الترشيح — بس الأهلية بتكون «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.</p>
     </div>
 
     <!-- خطوة 2: الميول -->
     <div id="fstep2" style="display:none">
-      <h2>وش يشبهك؟ 🧭</h2>
+      <h2>شنو يشبهك؟ 🧭</h2>
       <p class="muted">اختر اللي تحس إنه فعلًا أنت — مو اللي ودك تكونه.</p>
       <label class="fld">مجالات تستمتع فيها وتتفوق فيها (اختر واحدًا على الأقل)</label>
       <div class="chips" id="chips-interests">
@@ -182,10 +189,12 @@ table.admin th{color:var(--muted); font-weight:700}
         </div>
       </div>
       <p id="r-desc" style="margin-top:16px; font-size:1.02rem"></p>
+      <!-- المحاور الأربعة — منفصلة، لا نسبة واحدة مضللة -->
+      <div id="r-axes" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px"></div>
       <p class="muted" id="r-verify" style="font-size:.78rem; margin-top:12px"></p>
     </div>
 
-    <button class="btn btn-ghost btn-block" style="margin-bottom:16px" onclick="shareApp()">📤 أعجبك قراري؟ شاركه مع زميل يحتار مثلك</button>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:16px" onclick="shareApp()">📤 شارك قراري مع زميل يحتار مثلك</button>
     <p id="share-note" style="display:none; color:var(--green); font-weight:700; text-align:center; margin:-8px 0 16px">✓ تم</p>
 
     <!-- 2) لماذا رشحنا لك -->
@@ -194,9 +203,15 @@ table.admin th{color:var(--muted); font-weight:700}
       <div id="r-reasons"></div>
     </div>
 
+    <!-- 3) بصراحة معك -->
+    <div class="card" style="border-right:4px solid var(--amber)">
+      <h3 style="margin-bottom:10px">بصراحة معك 🧡</h3>
+      <div id="r-honest"></div>
+    </div>
+
     <!-- 3) ما الذي قد يغيّر التوصية -->
     <div class="card">
-      <h3 style="margin-bottom:10px">وش ممكن يغيّر هالتوصية؟</h3>
+      <h3 style="margin-bottom:10px">شنو اللي ممكن يغيّر التوصية؟</h3>
       <div id="r-changers"></div>
     </div>
 
@@ -226,10 +241,36 @@ table.admin th{color:var(--muted); font-weight:700}
     </div>
 
     <!-- بدائل -->
-    <p class="muted" style="font-weight:800; margin:22px 0 10px">خيارات أخرى قريبة منك:</p>
+    <p class="muted" style="font-weight:800; margin:22px 0 10px">خيارات قريبة منك (خياران بس، ما نرجع نشتتك):</p>
     <div id="r-alts"></div>
 
+    <!-- شلون عرفت عنا -->
+    <div class="card" id="acq-card">
+      <h3 style="margin-bottom:10px; font-size:1rem">شلون عرفت عن قراري؟ 👂</h3>
+      <div class="chips">
+        <button class="chip" onclick="sendAcquisition(this,'صديق')">صديق</button>
+        <button class="chip" onclick="sendAcquisition(this,'واتساب')">واتساب</button>
+        <button class="chip" onclick="sendAcquisition(this,'إنستغرام')">إنستغرام</button>
+        <button class="chip" onclick="sendAcquisition(this,'تيك توك')">تيك توك</button>
+        <button class="chip" onclick="sendAcquisition(this,'بحث قوقل')">بحث قوقل</button>
+        <button class="chip" onclick="sendAcquisition(this,'مدرسة أو مرشد')">مدرسة أو مرشد</button>
+        <button class="chip" onclick="sendAcquisition(this,'غير ذلك')">غير ذلك</button>
+      </div>
+    </div>
+
+    <button class="btn btn-ghost btn-block" style="margin-bottom:14px" onclick="buildParent();go('s-parent')">👨‍👩‍👦 اعرض نسخة ولي الأمر — أداة نقاش عائلي</button>
+
     <p class="foot" id="r-foot"></p>
+  </div>
+</section>
+
+<!-- ═══════ وضع ولي الأمر ═══════ -->
+<section id="s-parent" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="go('s-result')">← رجوع للنتيجة</button></div>
+    <h2 style="margin:12px 0 4px">نسخة ولي الأمر 👨‍👩‍👦</h2>
+    <p class="muted" style="margin-bottom:16px">هذا التقرير أداة نقاش عائلي واعٍ — مو قرار نهائي عن ولدكم.</p>
+    <div id="parent-report"></div>
   </div>
 </section>
 
@@ -253,6 +294,7 @@ table.admin th{color:var(--muted); font-weight:700}
       <div class="card"><h3 style="margin-bottom:10px">الانسحابات حسب النقطة</h3><table class="admin" id="admin-abandon"></table></div>
       <div class="card"><h3 style="margin-bottom:10px">ضغطات المصادر الرسمية</h3><table class="admin" id="admin-sources"></table></div>
       <div class="card"><h3 style="margin-bottom:10px">هل وضحت لك الصورة؟</h3><table class="admin" id="admin-feedback"></table></div>
+      <div class="card"><h3 style="margin-bottom:10px">شلون عرفوا عن قراري؟</h3><table class="admin" id="admin-acq"></table></div>
       <button class="btn btn-ghost btn-block" onclick="loadAdmin()">↻ تحديث البيانات</button>
     </div>
   </div>
@@ -339,8 +381,14 @@ const PROGRAMS = [
     next:'قدّم عبر نظام القبول، واستعد للمقابلة الشخصية — اجتيازها شرط موثق بعد القبول.' },
 ];
 
-const S = { pct:null, branch:null, eng:null, math:null, arb:null, interests:[], life:[] };
+const S = { status:null, pct:null, branch:null, eng:null, math:null, arb:null, interests:[], life:[] };
 let step = 1, RESULTS = [];
+
+function setStatus(el, v){
+  S.status = v;
+  el.parentElement.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+}
 
 /* ════════════════════════════════════════════════════════════
    طبقة التحليلات المركزية — قراري
@@ -429,16 +477,52 @@ window.addEventListener('beforeunload', function(){
     QA.track('journey_abandon', { at:'step'+step, via:'page_unload' });
 });
 
-/* ─── المشاركة (Web Share API + بديل النسخ) ─── */
+/* ─── المشاركة (Web Share API + بديل النسخ) — بطاقة بلا بيانات حساسة ─── */
 function shareApp(){
   QA.track('share_click', { channel: (navigator.share ? 'web_share_api' : 'clipboard') });
-  const payload = { title:'قراري', text:'جربت «قراري» — مستشار أكاديمي يرشح لك التخصص الأنسب من مصادر جامعة الكويت الرسمية، بخطوتين:', url: location.origin + location.pathname };
+  const rec = (RESULTS && RESULTS.length) ? RESULTS[0].p.name : '';
+  const payload = { title:'قراري',
+    text:'طلع لي أقرب مسار: '+rec+' 🎯\nجرّب «قراري» وشوف شنو يناسبك — توصية من مصادر جامعة الكويت الرسمية:',
+    url: location.origin + location.pathname };
   if(navigator.share){ navigator.share(payload).catch(function(){}); return; }
   const txt = payload.text + ' ' + payload.url;
   const done = function(){ const n=document.getElementById('share-note'); n.style.display='block'; setTimeout(function(){n.style.display='none'},2500); };
   if(navigator.clipboard) navigator.clipboard.writeText(txt).then(done).catch(done);
   else done();
 }
+
+/* ─── سؤال الاستحواذ: شلون عرفت عن قراري؟ ─── */
+function sendAcquisition(el, answer){
+  QA.track('feedback_submit', { kind:'acquisition', answer: answer });
+  document.querySelectorAll('#acq-card .chip').forEach(function(c){ c.disabled=true; c.style.opacity=.45; });
+  el.classList.add('selected'); el.style.opacity=1;
+}
+
+/* ─── وضع ولي الأمر ─── */
+function buildParent(){
+  const top = RESULTS[0], alts = RESULTS.slice(1,3), p = top.p;
+  const eligTxt = top.ev.st==='eligible' ? 'مؤهل رسميًا ✓' : top.ev.st==='not_eligible' ? 'غير مؤهل ✗ — '+top.ev.note : 'يحتاج تحقق ؟ — '+top.ev.note;
+  const reasons = buildReasons(top).slice(0,3);
+  const row = function(t,v){ return '<tr><td style="width:34%">'+t+'</td><td>'+v+'</td></tr>'; };
+  document.getElementById('parent-report').innerHTML =
+    '<div class="card"><table class="cmp" style="width:100%; border-collapse:collapse">'+
+    row('التخصص المرشح','<strong>'+p.name+'</strong> — '+p.college)+
+    row('ليش رُشح لولدكم؟', reasons.join('<br>'))+
+    row('هل هو مؤهل رسميًا؟', eligTxt)+
+    row('المنافسة المتوقعة','لا تتوفر بيانات كافية من مصدر رسمي — لا نعرض رقمًا غير موثق')+
+    row('المخاطر والنواقص','درجات القدرات تغيّر المعدل المكافئ بشكل كبير · أوزان 2026/2027 بانتظار التحديث الرسمي من الجهة · نافذة التقديم قصيرة')+
+    row('البدائل القريبة', alts.map(function(r){ return r.p.name+' ('+(r.ev.st==='eligible'?'مؤهل':'يحتاج تحقق')+')'; }).join('، '))+
+    row('الخطوة التالية', p.next)+
+    '</table></div>'+
+    '<div class="card" style="border-right:4px solid var(--brand)"><h3 style="margin-bottom:10px">أسئلة تناقشونها كعائلة 🏠</h3>'+
+    '<div class="reason"><span class="dot"></span><p>هل الأولوية للتخصص اللي يحبه، ولا للقبول الأسرع، ولا لسوق العمل؟</p></div>'+
+    '<div class="reason"><span class="dot"></span><p>هل نتقبل نمط حياة المهنة اليومي (ورديات، ميدان، جمهور) وليس فقط عنوانها؟</p></div>'+
+    '<div class="reason"><span class="dot"></span><p>هل درجات القدرات تحتاج إعادة قبل قفل التقديم؟ الجامعة تحتسب أعلى محاولة.</p></div>'+
+    '<div class="reason"><span class="dot"></span><p>شنو الخطة البديلة إذا ما انقبل في رغبته الأولى؟</p></div></div>'+
+    '<p class="foot">بيانات الأهلية من مصادر جامعة الكويت الرسمية · آخر تحقق '+VERIFIED_AT+'</p>';
+}
+
+/* ─── إعادة الرحلة ─── */
 
 /* ─── التغذية الراجعة ─── */
 function sendFeedback(answer){
@@ -498,10 +582,14 @@ function renderAdmin(rows, mode){
   const sc = {};
   by('source_click').forEach(function(r){ const s=(r.data&&r.data.source)||'؟'; sc[s]=(sc[s]||0)+1; });
   document.getElementById('admin-sources').innerHTML = rows_table(sc, 'المصدر');
-  // التغذية
+  // التغذية (بدون أسئلة الاستحواذ)
   const fb = {};
-  by('feedback_submit').forEach(function(r){ const a=(r.data&&r.data.answer)||'؟'; fb[a]=(fb[a]||0)+1; });
+  by('feedback_submit').forEach(function(r){ if(r.data && r.data.kind==='acquisition') return; const a=(r.data&&r.data.answer)||'؟'; fb[a]=(fb[a]||0)+1; });
   document.getElementById('admin-feedback').innerHTML = rows_table(fb, 'الإجابة');
+  // الاستحواذ
+  const acq = {};
+  by('feedback_submit').forEach(function(r){ if(!(r.data && r.data.kind==='acquisition')) return; const a=r.data.answer||'؟'; acq[a]=(acq[a]||0)+1; });
+  document.getElementById('admin-acq').innerHTML = rows_table(acq, 'القناة');
 }
 function stat(n,l){ return '<div class="stat"><div class="num">'+n+'</div><div class="lbl">'+l+'</div></div>'; }
 function rows_table(obj, head){
@@ -645,6 +733,27 @@ function renderResult(){
   document.getElementById('r-desc').textContent = p.desc;
   document.getElementById('r-verify').textContent = 'بيانات الأهلية: مصادر رسمية · آخر تحقق '+VERIFIED_AT+' · أوزان المعدل المكافئ 2025/2026';
 
+  // ─── المحاور الأربعة منفصلة ───
+  const lHits2 = p.life.filter(function(t){ return S.life.includes(t); });
+  const eligTxt = top.ev.st==='eligible' ? 'مؤهل رسميًا ✓' : top.ev.st==='not_eligible' ? 'غير مؤهل ✗' : 'يحتاج تحقق ؟';
+  const lifeTxt = S.life.length===0 ? 'لم تجب على أسئلة نمط العمل' : lHits2.length>0 ? 'ملائم لتفضيلاتك ('+lHits2.join('، ')+')' : 'ما تطابق واضح مع تفضيلاتك';
+  const ax = function(t,v,c){ return '<div style="background:var(--bg2); border:1px solid var(--line); border-radius:12px; padding:10px 12px"><div class="muted" style="font-size:.72rem">'+t+'</div><div style="font-weight:800; font-size:.88rem; color:'+c+'">'+v+'</div></div>'; };
+  document.getElementById('r-axes').innerHTML =
+    ax('توافق الميول', top.fit+'٪', 'var(--brand)') +
+    ax('الأهلية الرسمية', eligTxt, top.ev.st==='eligible'?'var(--green)':top.ev.st==='not_eligible'?'var(--red)':'var(--gold)') +
+    ax('المنافسة المتوقعة', 'لا تتوفر بيانات كافية', 'var(--muted)') +
+    ax('نمط الدراسة والعمل', lifeTxt, 'var(--ink)');
+
+  // ─── بصراحة معك ───
+  const honest = [];
+  if(top.ev.st==='needs_verification') honest.push(top.ev.note);
+  if(p.weights && (S.eng===null && S.math===null && S.arb===null)) honest.push('ما أدخلت درجات القدرات — عشان كذا ما نقدر نحسب معدلك المكافئ ولا نجزم أهليتك للكليات اللي تعتمده.');
+  honest.push('معدلات القبول الفعلية للسنوات السابقة غير منشورة في مصدر رسمي وصلنا له — عشان كذا «المنافسة المتوقعة» بدون بيانات، وما نبي نخمّن لك رقم.');
+  honest.push('الحد الأدنى العام لنسبة القبول بالجامعة: بانتظار التحديث الرسمي من الجهة.');
+  if(/مقابلة/.test(p.next) || /مقابلة/.test(p.desc)) honest.push('هذا المسار يشترط مقابلة شخصية بعد القبول — جهّز لها من بدري.');
+  honest.push('نعتمد أوزان 2025/2026 الموثقة؛ جدول 2026/2027 بانتظار التحديث الرسمي من الجهة وقد تتغير الأوزان.');
+  document.getElementById('r-honest').innerHTML = honest.map(function(t){ return '<div class="reason"><span class="dot" style="background:var(--amber)"></span><p>'+t+'</p></div>'; }).join('');
+
   document.getElementById('r-reasons').innerHTML = buildReasons(top)
     .map(t=>'<div class="reason"><span class="dot"></span><p>'+t+'</p></div>').join('');
   document.getElementById('r-changers').innerHTML = buildChangers(top)
@@ -664,7 +773,7 @@ function renderResult(){
   document.getElementById('r-foot').innerHTML =
     'قراري لا يعد بقبول — يوضّح أهليتك الرسمية وخطوتك التالية.<br>القرار النهائي للقبول لعمادة القبول والتسجيل وحدها · آخر تحقق من المصادر: '+VERIFIED_AT;
 }
-function restart(){ location.reload(); }
+function restart(){ QA.track('restart_journey'); location.reload(); }
 </script>
 </body>
 </html>
