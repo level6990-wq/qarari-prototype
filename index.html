@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>قراري — قبل لا تقدم… ادخل قراري</title>
+<!-- وسوم المشاركة (Open Graph / Twitter) — تظهر عند لصق الرابط في واتساب وغيره -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="قراري">
+<meta property="og:title" content="قراري — قبل لا تقدم… ادخل قراري">
+<meta property="og:description" content="مستشارك الأكاديمي لاختيار التخصص من مصادر جامعة الكويت الرسمية. جاوب على كم سؤال وشوف أقرب مسار يناسبك.">
+<meta property="og:image" content="https://level6990-wq.github.io/qarari-prototype/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://level6990-wq.github.io/qarari-prototype/">
+<meta property="og:locale" content="ar_KW">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="قراري — قبل لا تقدم… ادخل قراري">
+<meta name="twitter:description" content="مستشارك الأكاديمي لاختيار التخصص من مصادر جامعة الكويت الرسمية.">
+<meta name="twitter:image" content="https://level6990-wq.github.io/qarari-prototype/og-cover.png">
+<meta name="description" content="مستشارك الأكاديمي لاختيار التخصص من مصادر جامعة الكويت الرسمية. جاوب على كم سؤال وشوف أقرب مسار يناسبك.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1220'/%3E%3Ctext x='32' y='44' font-size='36' font-family='sans-serif' font-weight='900' text-anchor='middle' fill='%234f7cff'%3E%D9%82%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -106,7 +121,7 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══════ النموذج (خطوتان) ═══════ -->
 <section id="s-form" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="QA.track('journey_abandon',{at:'step'+step,via:'top_back'});go('s-welcome')" data-t="f.topback">← رجوع</button></div>
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="formTopBack()" data-t="f.topback">← رجوع</button></div>
     <div class="progress"><div id="formbar" style="width:50%"></div></div>
 
     <!-- خطوة 1: الأرقام -->
@@ -121,6 +136,7 @@ table.admin th{color:var(--muted); font-weight:700}
       </div>
       <label class="fld" data-t="f1.pct">نسبتك في الثانوية ٪</label>
       <input type="number" id="in-pct" min="50" max="100" step="0.1" placeholder="مثال: 87.5" inputmode="decimal" data-t-ph="f1.pctPh">
+      <p class="muted" style="font-size:.82rem; margin-top:6px" data-t="f1.pctNote">اكتبها كما في الشهادة — مو تقديرك.</p>
       <label class="fld" data-t="f1.branch">شنو قسمك في الثانوية؟</label>
       <div class="chips">
         <button class="chip" id="br-sci" onclick="setBranch('علمي')" data-t="f1.sci">القسم العلمي</button>
@@ -133,6 +149,7 @@ table.admin th{color:var(--muted); font-weight:700}
         <button class="chip" onclick="setApt(this,'ما اختبرت')" data-t="f1.q3">للحين ما اختبرت</button>
         <button class="chip" onclick="setApt(this,'ما أعرف')" data-t="f1.q4">ما أعرف إذا أحتاجها</button>
       </div>
+      <p class="muted" id="apt-why" style="display:none; font-size:.82rem; margin-top:8px" data-t="f1.aptWhy">معظم كليات جامعة الكويت تحتسب القدرات ضمن المعدل المكافئ — درجتك فيها ترفع فرصتك أو تنزلها، والجامعة تحتسب أعلى محاولة.</p>
       <div id="apt-scores" style="display:none">
         <label class="fld" data-t="f1.apt">درجات القدرات <span class="muted" style="font-weight:400; font-size:.85rem">(اختياري — لو تعرفها)</span></label>
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
@@ -198,13 +215,16 @@ table.admin th{color:var(--muted); font-weight:700}
         </div>
       </div>
       <p id="r-desc" style="margin-top:16px; font-size:1.02rem"></p>
+      <p id="r-summary" class="muted" style="margin-top:10px; font-size:.92rem"></p>
       <!-- المحاور الأربعة — منفصلة، لا نسبة واحدة مضللة -->
       <div id="r-axes" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px"></div>
       <p class="muted" id="r-verify" style="font-size:.78rem; margin-top:12px"></p>
     </div>
 
-    <button class="btn btn-ghost btn-block" style="margin-bottom:16px" onclick="shareApp()" data-t="r.share">📤 شارك قراري مع زميل يحتار مثلك</button>
-    <p id="share-note" style="display:none; color:var(--green); font-weight:700; text-align:center; margin:-8px 0 16px" data-t="r.shareDone">✓ تم</p>
+    <!-- مشاركة النتيجة — الموضع الأول: مباشرة بعد بطاقة الترشيح -->
+    <button class="btn btn-block" style="margin-bottom:10px; background:#25D366; color:#062b16" onclick="shareWhatsApp()" data-t="r.waShare">💬 شارك نتيجتك على واتساب</button>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:16px" onclick="copyLink()" data-t="r.copyLink">🔗 نسخ رابط قراري</button>
+    <p id="share-note" class="share-note" style="display:none; color:var(--green); font-weight:700; text-align:center; margin:-8px 0 16px" data-t="r.shareDone">✓ تم</p>
 
     <!-- 2) لماذا رشحنا لك -->
     <div class="card">
@@ -268,6 +288,11 @@ table.admin th{color:var(--muted); font-weight:700}
     </div>
 
     <button class="btn btn-ghost btn-block" style="margin-bottom:14px" onclick="buildParent();go('s-parent')" data-t="r.parentBtn">👨‍👩‍👦 اعرض نسخة ولي الأمر — أداة نقاش عائلي</button>
+
+    <!-- مشاركة النتيجة — الموضع الثاني: نهاية الصفحة -->
+    <button class="btn btn-block" style="margin-bottom:10px; background:#25D366; color:#062b16" onclick="shareWhatsApp()" data-t="r.waShare">💬 شارك نتيجتك على واتساب</button>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:10px" onclick="copyLink()" data-t="r.copyLink">🔗 نسخ رابط قراري</button>
+    <p class="share-note" style="display:none; color:var(--green); font-weight:700; text-align:center; margin:-4px 0 16px" data-t="r.shareDone">✓ تم</p>
 
     <p class="foot" id="r-foot"></p>
   </div>
@@ -347,11 +372,11 @@ const SRC = {
 const PROGRAMS = [
   { id:'med', name:'الطب البشري', college:'كلية الطب — جامعة الكويت', branch:'علمي', minCert:85,
     weights:{cert:75, eng:15, math:10}, interests:['علوم','خدمة','ناس'], life:['ورديات','جمهور'],
-    desc:'سبع سنوات تبدأ بعلوم أساسية وتنتهي بتدريب سريري في المستشفيات. طريق طويل ومتطلب، لكنه أوضح مسار مهني في الكويت لمن يحب العلم والناس معًا.',
+    desc:'سبع سنوات تبدأ بعلوم أساسية وتنتهي بتدريب سريري في المستشفيات. طريق طويل ومتطلب، ومساره المهني بعد التخرج مباشر لمن يحب العلم والناس معًا.',
     next:'قدّم عبر نظام القبول فورًا، وتأكد أن درجتي الإنجليزية والرياضيات مسجلة — تحتسبان 25٪ من معدلك المكافئ.' },
   { id:'dent', name:'طب الأسنان', college:'كلية طب الأسنان — جامعة الكويت', branch:'علمي', minCert:85,
     weights:{cert:75, eng:15, math:10}, interests:['علوم','خدمة','تصميم'], life:['جمهور','مكتب'],
-    desc:'يجمع بين العلم الطبي والدقة اليدوية والتعامل اليومي مع المرضى. سنوات أقل من الطب العام وبيئة عمل أكثر انتظامًا.',
+    desc:'يجمع بين العلم الطبي والدقة اليدوية والتعامل اليومي مع المرضى، وبيئة عمل أكثر انتظامًا من العمليات والطوارئ.',
     next:'قدّم عبر نظام القبول، وراجع جدول الأوزان — نفس أوزان كلية الطب تنطبق هنا.' },
   { id:'pharm', name:'الصيدلة', college:'كلية الصيدلة — جامعة الكويت', branch:'علمي', minCert:80,
     weights:{cert:70, eng:15, math:15}, interests:['علوم','خدمة','أرقام'], life:['مكتب','جمهور','ورديات'],
@@ -359,7 +384,7 @@ const PROGRAMS = [
     next:'قدّم عبر نظام القبول — الكلية تشترط 80٪ فأعلى في الثانوية للتنافس على مقاعدها.' },
   { id:'allied', name:'العلوم الطبية المساعدة', college:'كلية العلوم الطبية المساعدة — جامعة الكويت', branch:'علمي', minCert:80,
     weights:{cert:70, eng:20, math:10}, interests:['خدمة','علوم','ناس'], life:['ورديات','جمهور'],
-    desc:'تمريض، مختبرات، علاج طبيعي، أشعة — تخصصات صحية تطبيقية بدخول أسرع لسوق العمل وطلب ثابت على الكوادر الوطنية.',
+    desc:'تمريض، مختبرات، علاج طبيعي، أشعة — تخصصات صحية تطبيقية تتعامل مع المريض مباشرة وتتطلب دقة والتزامًا بالإجراءات.',
     next:'قدّم عبر نظام القبول. انتبه: اختبار الكيمياء هنا لتحديد المستوى فقط ولا يدخل معدلك.' },
   { id:'eng', name:'الهندسة (بما فيها هندسة الكمبيوتر)', college:'كلية الهندسة والبترول — جامعة الكويت', branch:'علمي', minCert:80,
     weights:{cert:65, eng:15, math:20}, interests:['تقنية','أرقام','تصميم'], life:['مكتب','ميدان'],
@@ -375,15 +400,15 @@ const PROGRAMS = [
     next:'قدّم عبر نظام القبول، وإن كنت تستهدف اضطرابات التواصل فاستعد لمقابلة شخصية بعد القبول.' },
   { id:'sci', name:'العلوم الأساسية (رياضيات، فيزياء، أحياء)', college:'كلية العلوم — جامعة الكويت', branch:'علمي', minCert:null,
     weights:null, interests:['علوم','أرقام','بحث'], life:['بحث','مكتب'],
-    desc:'أعمق مسار أكاديمي في الجامعة — والقبول فيه بنسبة الثانوية مباشرة دون معدل مكافئ. اختبارات القدرات هنا لتحديد مستواك فقط.',
+    desc:'مسار البحث والتحليل الأكاديمي — والقبول فيه بنسبة الثانوية مباشرة دون معدل مكافئ. اختبارات القدرات هنا لتحديد مستواك فقط.',
     next:'قدّم عبر نظام القبول — نسبتك هي كل شيء هنا، لا حاجة لدرجات قدرات في القبول.' },
   { id:'bus', name:'العلوم الإدارية (إدارة، محاسبة، تمويل، تسويق)', college:'كلية العلوم الإدارية — جامعة الكويت', branch:'كلاهما', minCert:null,
     weights:{cert:70, eng:15, math:15}, interests:['إدارة','أرقام','ناس'], life:['مكتب','جمهور'],
-    desc:'أوسع كلية استيعابًا وتقبل القسمين. لغة الأرقام والقرار — وتخصصك الدقيق تختاره بعد السنة الأولى حين تعرف نفسك أكثر.',
+    desc:'تقبل القسمين العلمي والأدبي. لغة الأرقام والقرار — وتخصصك الدقيق تختاره بعد السنة الأولى حين تعرف نفسك أكثر.',
     next:'قدّم عبر نظام القبول. شرط إضافي موثق: 40٪ فأعلى في اختبار قدرات الإنجليزية.' },
   { id:'arts', name:'الآداب (إعلام، لغات، تاريخ، فلسفة)', college:'كلية الآداب — جامعة الكويت', branch:'كلاهما', minCert:null,
     weights:{cert:85, eng:0, math:0, arb:15}, interests:['كتابة','ناس','تصميم'], life:['جمهور','بحث','مكتب'],
-    desc:'كلية اللغة والفكر — قسم الإنجليزية يحتسب 15٪ من اختبار الإنجليزية بدل العربية، وقسم الفرنسية يشترط 50٪ في اختبار الفرنسية.',
+    desc:'أقسام اللغات والإعلام والتاريخ والفلسفة — قسم الإنجليزية يحتسب 15٪ من اختبار الإنجليزية بدل العربية، وقسم الفرنسية يشترط 50٪ في اختبار الفرنسية.',
     next:'قدّم عبر نظام القبول، وراجع شروط القسم الذي تستهدفه داخل الكلية — تختلف أوزانه.' },
   { id:'soc', name:'العلوم الاجتماعية (علم نفس، علم اجتماع، سياسية)', college:'كلية العلوم الاجتماعية — جامعة الكويت', branch:'كلاهما', minCert:null,
     weights:{cert:90, eng:0, math:0, arb:10}, interests:['ناس','خدمة','بحث'], life:['جمهور','بحث','مكتب'],
@@ -395,11 +420,11 @@ const PROGRAMS = [
     next:'قدّم عبر نظام القبول — اختبار العربية يشكل 15٪ من معدلك المكافئ هنا.' },
   { id:'law', name:'الحقوق', college:'كلية الحقوق — جامعة الكويت', branch:'كلاهما', minCert:null,
     weights:null, interests:['كتابة','ناس','إدارة'], life:['جمهور','بحث'],
-    desc:'القبول بنسبة الثانوية مباشرة دون معدل مكافئ، والفصل الأول فقط. قراءة وتحليل وصياغة — مهنة تُبنى بالسمعة على سنوات.',
+    desc:'القبول بنسبة الثانوية مباشرة دون معدل مكافئ، والفصل الأول فقط. قراءة وتحليل وصياغة قانونية، ويتبع التخرج تدريب مهني قبل مزاولة المهنة.',
     next:'قدّم عبر نظام القبول الآن — الحقوق من الكليات التي تقبل في الفصل الأول فقط.' },
   { id:'edu', name:'التربية', college:'كلية التربية — جامعة الكويت', branch:'كلاهما', minCert:null,
     weights:{cert:80, eng:10, math:0, arb:10}, interests:['خدمة','ناس','كتابة'], life:['جمهور','مكتب'],
-    desc:'مهنة أثرها يتجاوز صاحبها. التخصصات العلمية للعلمي والأدبية للأدبي (باستثناءات موثقة)، وجميع المقبولين يجتازون مقابلة شخصية بعد القبول.',
+    desc:'التدريس في مدارس الكويت. التخصصات العلمية للعلمي والأدبية للأدبي (باستثناءات موثقة)، وجميع المقبولين يجتازون مقابلة شخصية بعد القبول.',
     next:'قدّم عبر نظام القبول، واستعد للمقابلة الشخصية — اجتيازها شرط موثق بعد القبول.' },
 ];
 
@@ -414,12 +439,12 @@ let step = 1, RESULTS = [];
 const DEFAULT_TEXTS = {
   /* الصفحة الرئيسية */
   'w.title':    'نضيّق خياراتك،\nونوضح لك الخطوة الجاية',
-  'w.subtitle': 'جاوب على كم سؤال، ونقارن إجاباتك بشروط القبول والمصادر الرسمية.',
+  'w.subtitle': 'لطلبة الثانوية في الكويت: جاوب على 8 أسئلة (دقيقتان) وشوف أقرب تخصص يناسبك — النطاق الحالي: جامعة الكويت، من مصادرها الرسمية.',
   'w.cta':      'ابدأ تقييمك المجاني ←',
   'w.trust':    '🔒 كل معلومة مرتبطة بمصدر رسمي وتاريخ آخر تحقق',
   'w.footer':   'قراري © 2026 · صُنع في الكويت 🇰🇼 · قبل لا تقدم… ادخل قراري',
   /* شريط الخصوصية */
-  'c.text': '🔒 <strong style="color:var(--ink)">خصوصيتك أولًا:</strong> نجمع إحصاءات استخدام مجهولة تمامًا — بدون اسم أو رقم مدني أو هاتف — لتحسين قراري. درجاتك واختياراتك التفصيلية لا تُرسل أبدًا، فقط نوع الحدث (مثل: بدأ، أكمل، ضغط مصدر).',
+  'c.text': '🔒 <strong style="color:var(--ink)">خصوصيتك أولًا:</strong> نجمع إحصاءات استخدام مجهولة تمامًا — بدون اسم أو رقم مدني أو هاتف. درجاتك واختياراتك التفصيلية لا تُرسل أبدًا.',
   'c.yes': 'موافق', 'c.no': 'لا، شكرًا',
   /* النموذج — الخطوة 1 */
   'f.topback': '← رجوع',
@@ -428,17 +453,19 @@ const DEFAULT_TEXTS = {
   'f1.status': 'حالتك الحين',
   'f1.st1': 'في ثاني عشر 📚', 'f1.st2': 'خريج هالسنة 🎓', 'f1.st3': 'خريج سنة سابقة 🗂️',
   'f1.pct': 'نسبتك في الثانوية ٪', 'f1.pctPh': 'مثال: 87.5',
+  'f1.pctNote': 'اكتبها كما في الشهادة — مو تقديرك.',
   'f1.branch': 'شنو قسمك في الثانوية؟', 'f1.sci': 'القسم العلمي', 'f1.art': 'القسم الأدبي',
   'f1.aptQ': 'هل اختبرت القدرات؟',
   'f1.q1': 'عندي الدرجات', 'f1.q2': 'اختبرت وبانتظار النتيجة',
   'f1.q3': 'للحين ما اختبرت', 'f1.q4': 'ما أعرف إذا أحتاجها',
+  'f1.aptWhy': 'معظم كليات جامعة الكويت تحتسب القدرات ضمن المعدل المكافئ — درجتك فيها ترفع فرصتك أو تنزلها، والجامعة تحتسب أعلى محاولة.',
   'f1.apt': 'درجات القدرات ',
   'f1.engPh': 'إنجليزي', 'f1.mathPh': 'رياضيات', 'f1.arbPh': 'عربي',
   'f1.aptNote': 'تركها فاضية ما يمنع الترشيح — بس الأهلية بتكون «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.',
   /* النموذج — الخطوة 2 */
   'f2.title': 'شنو يشبهك؟ 🧭',
   'f2.sub': 'اختر اللي تحس إنه فعلًا أنت — مو اللي ودك تكونه.',
-  'f2.interests': 'مجالات تستمتع فيها وتتفوق فيها (اختر واحدًا على الأقل)',
+  'f2.interests': 'مجالات تستمتع فيها فعلًا (اختر أقرب اثنين لك)',
   'f2.i1': 'علوم وأحياء 🧬', 'f2.i2': 'تقنية وبرمجة 💻', 'f2.i3': 'أرقام وتحليل 📊', 'f2.i4': 'فهم الناس 🤝',
   'f2.i5': 'كتابة وإقناع ✍️', 'f2.i6': 'تصميم وإبداع 🎨', 'f2.i7': 'تنظيم وقيادة 🧩', 'f2.i8': 'رعاية وخدمة 🩺',
   'f2.life': 'يوم شغلك المثالي بعد عشر سنين',
@@ -448,8 +475,10 @@ const DEFAULT_TEXTS = {
   'err.pct': 'أدخل نسبتك بين 50 و 100', 'err.branch': 'اختر قسمك أولًا', 'err.interests': 'اختر مجالًا واحدًا على الأقل يشدك',
   /* صفحة النتيجة — ثابتة */
   'r.toprestart': '↺ من جديد',
-  'r.kicker': 'ترشيحنا الأول لك', 'r.fitLbl': 'توافق معك',
-  'r.share': '📤 شارك قراري مع زميل يحتار مثلك', 'r.shareDone': '✓ تم',
+  'r.kicker': 'ترشيحنا الأول لك', 'r.fitLbl': 'توافق ميولك',
+  'r.waShare': '💬 شارك نتيجتك على واتساب', 'r.copyLink': '🔗 نسخ رابط قراري', 'r.shareDone': '✓ تم',
+  'r.summary': 'الخلاصة: {elig} لـ«{name}»، وتوافق ميولك معه {fit}٪ — والأسباب تحت.',
+  'r.applyNow': 'قدّم الآن عبر نظام القبول الرسمي ←',
   'r.whyTitle': 'ليش رشحنا لك هذا التخصص؟',
   'r.honestTitle': 'بصراحة معك 🧡',
   'r.changeTitle': 'شنو اللي ممكن يغيّر التوصية؟',
@@ -472,7 +501,7 @@ const DEFAULT_TEXTS = {
   'r.lifeNone': 'لم تجب على أسئلة نمط العمل', 'r.lifeYes': 'ملائم لتفضيلاتك ({hits})', 'r.lifeNo': 'ما تطابق واضح مع تفضيلاتك',
   'r.verify': 'بيانات الأهلية: مصادر رسمية · آخر تحقق {verified} · أوزان المعدل المكافئ 2025/2026',
   'r.countOpen': '⏳ <strong>نافذة التقديم لجامعة الكويت مفتوحة الآن</strong> — يتبقى {left} على الإغلاق (الثلاثاء 28 يوليو، 10 صباحًا) — <strong>مصدر رسمي موثق</strong>',
-  'r.countClosed': 'انتهت نافذة الفصل الأول (18–28 يوليو 2026). الكليات المقيدة بالفصل الأول لا تقبل الآن — تابع إعلان الفصل الثاني من المصدر الرسمي.',
+  'r.countClosed': 'انتهت نافذة الفصل الأول (18–28 يوليو 2026). خطوتك الآن: حضّر درجات القدرات ووثائقك، وتابع إعلان الفصل الثاني من المصدر الرسمي — النتيجة أدناه تبقى صالحة للتخطيط.',
   'r.honestNoScores': 'ما أدخلت درجات القدرات — عشان كذا ما نقدر نحسب معدلك المكافئ ولا نجزم أهليتك للكليات اللي تعتمده.',
   'r.honestNoComp': 'معدلات القبول الفعلية للسنوات السابقة غير منشورة في مصدر رسمي وصلنا له — عشان كذا «المنافسة المتوقعة» بدون بيانات، وما نبي نخمّن لك رقم.',
   'r.honestMin': 'الحد الأدنى العام لنسبة القبول بالجامعة: بانتظار التحديث الرسمي من الجهة.',
@@ -481,7 +510,7 @@ const DEFAULT_TEXTS = {
   'r.nextNow': 'الآن:', 'r.nextBefore': 'قبل القفل:', 'r.nextAsk': 'عند السؤال:',
   'r.nextOrder': 'رتّب رغباتك داخل طلب الالتحاق بأكبر عدد ممكن — الدليل الرسمي ينصح بذلك، ولا يمكن التعديل بعد إغلاق الفترة.',
   'r.nextEmail': 'راسل عمادة القبول والتسجيل admission@ku.edu.kw (موثق في الدليل الرسمي).',
-  'r.foot': 'قراري لا يعد بقبول — يوضّح أهليتك الرسمية وخطوتك التالية.\nالقرار النهائي للقبول لعمادة القبول والتسجيل وحدها · آخر تحقق من المصادر: {verified}',
+  'r.foot': 'قراري لا يعد بقبول — يوضّح أهليتك الرسمية وخطوتك التالية.\nالقرار النهائي للقبول لعمادة القبول والتسجيل وحدها · آخر تحقق من المصادر: {verified}\nالنطاق الحالي: جامعة الكويت فقط — عبدالله السالم والتطبيقي والبعثات قريبًا.',
   /* أسباب التوصية */
   'rs.hits': 'اخترت أنك تستمتع بـ«{hits}» — وهذا صلب مواد التخصص ويومياته، مو هامشه. التخصص اللي يشبه اهتمامك تُكمله، واللي يخالفه تعاني فيه.',
   'rs.minCert': 'نسبتك {pct}٪ تتجاوز شرط الكلية الموثق ({min}٪ فأعلى) — تدخل المنافسة وأنت مستوفٍ للأهلية الرسمية.',
@@ -511,7 +540,7 @@ const DEFAULT_TEXTS = {
   'pt.q4': 'شنو الخطة البديلة إذا ما انقبل في رغبته الأولى؟',
   'pt.foot': 'بيانات الأهلية من مصادر جامعة الكويت الرسمية · آخر تحقق {verified}',
   /* المشاركة */
-  'sh.text': 'طلع لي أقرب مسار: {rec} 🎯\nجرّب «قراري» وشوف شنو يناسبك — توصية من مصادر جامعة الكويت الرسمية:',
+  'sh.waText': 'جربت قراري وطلع لي أقرب تخصص يناسبني. جرّبه قبل لا تقدم.',
   /* عام */
   'meta.verifiedAt': '26 يوليو 2026',
   /* المصادر الرسمية (أسماء وروابط) */
@@ -586,11 +615,13 @@ const CMS_SCHEMA = [
   {k:'f1.status', g:'الأسئلة — الخطوة 1', l:'سؤال الحالة'},
   {k:'f1.st1', g:'الأسئلة — الخطوة 1', l:'خيار الحالة 1'}, {k:'f1.st2', g:'الأسئلة — الخطوة 1', l:'خيار الحالة 2'}, {k:'f1.st3', g:'الأسئلة — الخطوة 1', l:'خيار الحالة 3'},
   {k:'f1.pct', g:'الأسئلة — الخطوة 1', l:'سؤال النسبة'}, {k:'f1.pctPh', g:'الأسئلة — الخطوة 1', l:'مثال داخل خانة النسبة'},
+  {k:'f1.pctNote', g:'الأسئلة — الخطوة 1', l:'ملاحظة تحت خانة النسبة'},
   {k:'f1.branch', g:'الأسئلة — الخطوة 1', l:'عنوان سؤال القسم'},
   {k:'f1.sci', g:'الأسئلة — الخطوة 1', l:'خيار القسم العلمي'}, {k:'f1.art', g:'الأسئلة — الخطوة 1', l:'خيار القسم الأدبي'},
   {k:'f1.aptQ', g:'الأسئلة — الخطوة 1', l:'سؤال: هل اختبرت القدرات؟'},
   {k:'f1.q1', g:'الأسئلة — الخطوة 1', l:'خيار القدرات 1'}, {k:'f1.q2', g:'الأسئلة — الخطوة 1', l:'خيار القدرات 2'},
   {k:'f1.q3', g:'الأسئلة — الخطوة 1', l:'خيار القدرات 3'}, {k:'f1.q4', g:'الأسئلة — الخطوة 1', l:'خيار القدرات 4'},
+  {k:'f1.aptWhy', g:'الأسئلة — الخطوة 1', l:'توضيح يظهر مع «ما أعرف إذا أحتاجها»', m:1},
   {k:'f1.apt', g:'الأسئلة — الخطوة 1', l:'عنوان خانات الدرجات (تظهر مع «عندي الدرجات»)'},
   {k:'f1.engPh', g:'الأسئلة — الخطوة 1', l:'خانة الإنجليزية'}, {k:'f1.mathPh', g:'الأسئلة — الخطوة 1', l:'خانة الرياضيات'}, {k:'f1.arbPh', g:'الأسئلة — الخطوة 1', l:'خانة العربية'},
   {k:'f1.aptNote', g:'الأسئلة — الخطوة 1', l:'ملاحظة ترك القدرات فارغة', m:1},
@@ -611,6 +642,8 @@ const CMS_SCHEMA = [
   {k:'r.toprestart', g:'الأزرار والتنقل', l:'زر إعادة الرحلة'},
   {k:'r.kicker', g:'صفحة النتيجة', l:'سطر «ترشيحنا الأول»'},
   {k:'r.fitLbl', g:'صفحة النتيجة', l:'تسمية نسبة التوافق'},
+  {k:'r.summary', g:'صفحة النتيجة', l:'جملة الخلاصة — {elig} الأهلية، {name} التخصص، {fit} النسبة', m:1},
+  {k:'r.applyNow', g:'صفحة النتيجة', l:'زر «قدّم الآن»'},
   {k:'r.whyTitle', g:'صفحة النتيجة', l:'عنوان: ليش رشحنا'},
   {k:'r.honestTitle', g:'صفحة النتيجة', l:'عنوان: بصراحة معك'},
   {k:'r.changeTitle', g:'صفحة النتيجة', l:'عنوان: ما الذي يغيّر التوصية'},
@@ -619,7 +652,8 @@ const CMS_SCHEMA = [
   {k:'r.srcSub', g:'صفحة النتيجة', l:'وصف قسم المصادر', m:1},
   {k:'r.altsTitle', g:'صفحة النتيجة', l:'عنوان الخيارات القريبة'},
   {k:'r.parentBtn', g:'صفحة النتيجة', l:'زر نسخة ولي الأمر'},
-  {k:'r.share', g:'صفحة النتيجة', l:'زر المشاركة'},
+  {k:'r.waShare', g:'صفحة النتيجة', l:'زر مشاركة واتساب'},
+  {k:'r.copyLink', g:'صفحة النتيجة', l:'زر نسخ الرابط'},
   {k:'r.shareDone', g:'صفحة النتيجة', l:'تأكيد المشاركة'},
   {k:'r.fbTitle', g:'صفحة النتيجة', l:'سؤال «هل وضحت الصورة؟»'},
   {k:'r.fbSub', g:'صفحة النتيجة', l:'وصف سؤال التغذية'},
@@ -672,7 +706,7 @@ const CMS_SCHEMA = [
   {k:'pt.q1', g:'ولي الأمر', l:'سؤال عائلي 1', m:1}, {k:'pt.q2', g:'ولي الأمر', l:'سؤال عائلي 2', m:1},
   {k:'pt.q3', g:'ولي الأمر', l:'سؤال عائلي 3', m:1}, {k:'pt.q4', g:'ولي الأمر', l:'سؤال عائلي 4', m:1},
   {k:'pt.foot', g:'ولي الأمر', l:'تذييل التقرير — {verified} التاريخ', m:1},
-  {k:'sh.text', g:'المشاركة', l:'نص بطاقة المشاركة — {rec} التخصص المرشح', m:1},
+  {k:'sh.waText', g:'المشاركة', l:'نص مشاركة واتساب (يُلحق به رابط الموقع تلقائيًا)', m:1},
   {k:'err.pct', g:'رسائل الخطأ', l:'خطأ النسبة'}, {k:'err.branch', g:'رسائل الخطأ', l:'خطأ القسم'}, {k:'err.interests', g:'رسائل الخطأ', l:'خطأ المجالات'},
   {k:'meta.verifiedAt', g:'عام', l:'تاريخ آخر تحقق من المصادر'},
   {k:'src.portalLbl', g:'المصادر الرسمية', l:'مصدر 1 — الاسم'}, {k:'src.portalUrl', g:'المصادر الرسمية', l:'مصدر 1 — الرابط'},
@@ -769,6 +803,8 @@ function setApt(el, v){
   el.parentElement.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
   el.classList.add('selected');
   const box = document.getElementById('apt-scores');
+  const why = document.getElementById('apt-why');
+  if(why) why.style.display = (v === 'ما أعرف') ? 'block' : 'none';
   if(v === 'عندي الدرجات'){
     box.style.display = 'block';
   } else {
@@ -826,6 +862,11 @@ const QA = {
     if(!this.consent()) document.getElementById('consent-bar').classList.add('show');
     this.loadGA();
     sbInit();
+    // زيارة واردة من رابط مشاركة (?ref=share): تُسجَّل مرة واحدة لكل جلسة
+    if(/[?&]ref=share/.test(location.search||'') && !sessionStorage.getItem('qarari_shared_visit')){
+      sessionStorage.setItem('qarari_shared_visit','1');
+      if(this.consent()==='granted') this.track('shared_visit');
+    }
   },
   track(event, data){
     if(this.consent()!=='granted') return;      // لا موافقة = لا جمع إطلاقًا
@@ -874,6 +915,8 @@ loadContent();
 function setConsent(v){
   localStorage.setItem('qarari_consent', v);
   document.getElementById('consent-bar').classList.remove('show');
+  // إن وصل المستخدم من رابط مشاركة ووافق الآن، نسجّل الزيارة المشاركة المؤجلة
+  if(v==='granted' && sessionStorage.getItem('qarari_shared_visit')) QA.track('shared_visit');
 }
 function startJourney(){ QA.track('journey_start'); go('s-form'); showStep(1); }
 window.addEventListener('beforeunload', function(){
@@ -881,18 +924,26 @@ window.addEventListener('beforeunload', function(){
     QA.track('journey_abandon', { at:'step'+step, via:'page_unload' });
 });
 
-/* ─── المشاركة (Web Share API + بديل النسخ) — بطاقة بلا بيانات حساسة ─── */
-function shareApp(){
-  QA.track('share_click', { channel: (navigator.share ? 'web_share_api' : 'clipboard') });
-  const rec = (RESULTS && RESULTS.length) ? RESULTS[0].p.name : '';
-  const payload = { title:'قراري',
-    text: tpl(T('sh.text'),{rec:rec}),
-    url: location.origin + location.pathname };
-  if(navigator.share){ navigator.share(payload).catch(function(){}); return; }
-  const txt = payload.text + ' ' + payload.url;
-  const done = function(){ const n=document.getElementById('share-note'); n.style.display='block'; setTimeout(function(){n.style.display='none'},2500); };
-  if(navigator.clipboard) navigator.clipboard.writeText(txt).then(done).catch(done);
-  else done();
+/* ─── المشاركة — زر واتساب مباشر + نسخ الرابط (بلا أي بيانات حساسة) ─── */
+function shareUrl(){ return location.origin + location.pathname + '?ref=share'; }
+function shareDoneNote(){
+  const ns = document.querySelectorAll('.share-note');
+  ns.forEach(function(n){ n.style.display = 'block'; });
+  setTimeout(function(){ ns.forEach(function(n){ n.style.display = 'none'; }); }, 2500);
+}
+function shareWhatsApp(){
+  QA.track('whatsapp_share', { recommended: (RESULTS && RESULTS.length) ? RESULTS[0].p.id : null });
+  const txt = T('sh.waText') + '\n' + shareUrl();
+  window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
+  QA.track('share_success', { channel:'whatsapp' });   // نجاح فتح قناة المشاركة تقنيًا
+  shareDoneNote();
+}
+function copyLink(){
+  QA.track('share_click', { channel:'copy_link_button' });
+  const ok = function(){ QA.track('copy_link'); QA.track('share_success', { channel:'clipboard' }); shareDoneNote(); };
+  const fail = function(){ shareDoneNote(); };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(shareUrl()).then(ok).catch(fail);
+  else fail();
 }
 
 /* ─── سؤال الاستحواذ: شلون عرفت عن قراري؟ ─── */
@@ -904,6 +955,7 @@ function sendAcquisition(el, answer){
 
 /* ─── وضع ولي الأمر ─── */
 function buildParent(){
+  QA.track('parent_view', { recommended: RESULTS[0].p.id });
   const top = RESULTS[0], alts = RESULTS.slice(1,3), p = top.p;
   const eligTxt = top.ev.st==='eligible' ? T('pt.axOk') : top.ev.st==='not_eligible' ? tpl(T('pt.axNo'),{note:top.ev.note}) : tpl(T('pt.axQ'),{note:top.ev.note});
   const reasons = buildReasons(top).slice(0,3);
@@ -1068,6 +1120,12 @@ function pickMany(el){
   const arr = el.parentElement.id==='chips-interests' ? S.interests : S.life;
   const i = arr.indexOf(v); i>=0 ? arr.splice(i,1) : arr.push(v);
 }
+/* زر الرجوع العلوي: خطوة واحدة للخلف فقط — لا يمسح الإجابات ولا يعيد الرحلة */
+function formTopBack(){
+  if(step === 2){ showStep(1); return; }
+  QA.track('journey_abandon', { at:'step1', via:'top_back' });
+  go('s-welcome');
+}
 function formNav(dir){
   if(dir===-1){
     if(step===1){ QA.track('journey_abandon',{at:'step1',via:'back_button'}); go('s-welcome'); }
@@ -1175,6 +1233,8 @@ function renderResult(){
     (top.ev.note ? '<p class="muted" style="font-size:.85rem; margin-top:6px">'+top.ev.note+'</p>' : '');
   document.getElementById('r-fit').textContent = top.fit+'٪';
   document.getElementById('r-desc').textContent = p.desc;
+  const sumElig = top.ev.st==='eligible' ? 'مؤهل رسميًا' : top.ev.st==='not_eligible' ? 'غير مؤهل' : 'أهليتك تحتاج تحققًا';
+  document.getElementById('r-summary').textContent = tpl(T('r.summary'),{ elig:sumElig, name:p.name, fit:top.fit });
   document.getElementById('r-verify').textContent = tpl(T('r.verify'),{verified:T('meta.verifiedAt')});
 
   // ─── المحاور الأربعة منفصلة ───
@@ -1205,7 +1265,8 @@ function renderResult(){
   document.getElementById('r-next').innerHTML =
     '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>'+T('r.nextNow')+'</strong> '+p.next+'</p></div>'+
     '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>'+T('r.nextBefore')+'</strong> '+T('r.nextOrder')+'</p></div>'+
-    '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>'+T('r.nextAsk')+'</strong> '+T('r.nextEmail')+'</p></div>';
+    '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>'+T('r.nextAsk')+'</strong> '+T('r.nextEmail')+'</p></div>'+
+    '<a class="btn btn-primary btn-block" style="margin-top:14px; text-decoration:none; text-align:center" href="'+SRC.portal.url+'" target="_blank" rel="noopener" onclick="QA.track(\'apply_click\',{recommended:\''+p.id+'\'})">'+T('r.applyNow')+'</a>';
 
   document.getElementById('r-sources').innerHTML = [SRC.portal, SRC.news, SRC.weights, SRC.rules]
     .map(s=>'<a class="src-link" href="'+s.url+'" target="_blank" rel="noopener" onclick="QA.track(\'source_click\',{source:\''+s.label+'\'})"><span>🔗</span><span>'+s.label+'</span><span class="arrow">↗</span></a>').join('');
