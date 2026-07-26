@@ -935,7 +935,9 @@ function shareWhatsApp(){
   QA.track('whatsapp_share', { recommended: (RESULTS && RESULTS.length) ? RESULTS[0].p.id : null });
   const txt = T('sh.waText') + '\n' + shareUrl();
   window.open('https://wa.me/?text=' + encodeURIComponent(txt), '_blank');
-  QA.track('share_success', { channel:'whatsapp' });   // نجاح فتح قناة المشاركة تقنيًا
+  // المتصفح يثبت فتح نافذة واتساب فقط — لا يستطيع إثبات أن المستخدم أرسل فعلًا،
+  // لذلك لا نسجّل share_success هنا. الإرسال الحقيقي يُقاس عبر shared_visit (من ضغط الرابط).
+  QA.track('whatsapp_share_open');
   shareDoneNote();
 }
 function copyLink(){
