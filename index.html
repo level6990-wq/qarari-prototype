@@ -79,10 +79,10 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══ شريط موافقة الخصوصية ═══ -->
 <div class="consent" id="consent-bar">
   <div class="wrap">
-    <p>🔒 <strong style="color:var(--ink)">خصوصيتك أولًا:</strong> نجمع إحصاءات استخدام مجهولة تمامًا — بدون اسم أو رقم مدني أو هاتف — لتحسين قراري. درجاتك واختياراتك التفصيلية لا تُرسل أبدًا، فقط نوع الحدث (مثل: بدأ، أكمل، ضغط مصدر).</p>
+    <p data-t="c.text" data-t-html>🔒 <strong style="color:var(--ink)">خصوصيتك أولًا:</strong> نجمع إحصاءات استخدام مجهولة تمامًا — بدون اسم أو رقم مدني أو هاتف — لتحسين قراري. درجاتك واختياراتك التفصيلية لا تُرسل أبدًا، فقط نوع الحدث (مثل: بدأ، أكمل، ضغط مصدر).</p>
     <div style="display:flex; gap:10px">
-      <button class="btn btn-primary" style="padding:10px 22px; font-size:.9rem" onclick="setConsent('granted')">موافق</button>
-      <button class="btn btn-ghost" style="padding:10px 22px; font-size:.9rem" onclick="setConsent('denied')">لا، شكرًا</button>
+      <button class="btn btn-primary" style="padding:10px 22px; font-size:.9rem" onclick="setConsent('granted')" data-t="c.yes">موافق</button>
+      <button class="btn btn-ghost" style="padding:10px 22px; font-size:.9rem" onclick="setConsent('denied')" data-t="c.no">لا، شكرًا</button>
     </div>
   </div>
 </div>
@@ -91,77 +91,77 @@ table.admin th{color:var(--muted); font-weight:700}
 <section id="s-welcome" class="screen active">
   <div class="wrap" style="text-align:center; padding-top:56px">
     <div class="logo" style="font-size:1.9rem">قرار<span>ي</span></div>
-    <h1 style="font-size:1.9rem; margin:26px 0 12px">نضيّق خياراتك،<br>ونوضح لك الخطوة الجاية</h1>
-    <p class="muted" style="max-width:480px; margin:0 auto 34px; font-size:1.05rem">
+    <h1 style="font-size:1.9rem; margin:26px 0 12px" data-t="w.title" data-t-html>نضيّق خياراتك،<br>ونوضح لك الخطوة الجاية</h1>
+    <p class="muted" style="max-width:480px; margin:0 auto 34px; font-size:1.05rem" data-t="w.subtitle">
       جاوب على كم سؤال، ونقارن إجاباتك بشروط القبول والمصادر الرسمية.
     </p>
-    <button class="btn btn-primary btn-block" style="max-width:380px; margin:0 auto" onclick="startJourney()">
+    <button class="btn btn-primary btn-block" style="max-width:380px; margin:0 auto" onclick="startJourney()" data-t="w.cta">
       ابدأ تقييمك المجاني ←
     </button>
-    <p style="color:var(--green); font-size:.85rem; font-weight:700; margin-top:16px">🔒 كل معلومة مرتبطة بمصدر رسمي وتاريخ آخر تحقق</p>
-    <p class="foot">قراري © 2026 · صُنع في الكويت 🇰🇼 · قبل لا تقدم… ادخل قراري</p>
+    <p style="color:var(--green); font-size:.85rem; font-weight:700; margin-top:16px" data-t="w.trust">🔒 كل معلومة مرتبطة بمصدر رسمي وتاريخ آخر تحقق</p>
+    <p class="foot" data-t="w.footer">قراري © 2026 · صُنع في الكويت 🇰🇼 · قبل لا تقدم… ادخل قراري</p>
   </div>
 </section>
 
 <!-- ═══════ النموذج (خطوتان) ═══════ -->
 <section id="s-form" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="QA.track('journey_abandon',{at:'step'+step,via:'top_back'});go('s-welcome')">← رجوع</button></div>
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="QA.track('journey_abandon',{at:'step'+step,via:'top_back'});go('s-welcome')" data-t="f.topback">← رجوع</button></div>
     <div class="progress"><div id="formbar" style="width:50%"></div></div>
 
     <!-- خطوة 1: الأرقام -->
     <div id="fstep1">
-      <h2>أرقامك أولًا 🧮</h2>
-      <p class="muted">هذي تحدد أهليتك الرسمية — جاوب بدقة، النتيجة لك وحدك.</p>
-      <label class="fld">حالتك الحين</label>
+      <h2 data-t="f1.title">أرقامك أولًا 🧮</h2>
+      <p class="muted" data-t="f1.sub">هذي تحدد أهليتك الرسمية — جاوب بدقة، النتيجة لك وحدك.</p>
+      <label class="fld" data-t="f1.status">حالتك الحين</label>
       <div class="chips">
-        <button class="chip" onclick="setStatus(this,'ثاني عشر')">في ثاني عشر 📚</button>
-        <button class="chip" onclick="setStatus(this,'خريج هالسنة')">خريج هالسنة 🎓</button>
-        <button class="chip" onclick="setStatus(this,'خريج سابق')">خريج سنة سابقة 🗂️</button>
+        <button class="chip" onclick="setStatus(this,'ثاني عشر')" data-t="f1.st1">في ثاني عشر 📚</button>
+        <button class="chip" onclick="setStatus(this,'خريج هالسنة')" data-t="f1.st2">خريج هالسنة 🎓</button>
+        <button class="chip" onclick="setStatus(this,'خريج سابق')" data-t="f1.st3">خريج سنة سابقة 🗂️</button>
       </div>
-      <label class="fld">نسبتك في الثانوية ٪</label>
-      <input type="number" id="in-pct" min="50" max="100" step="0.1" placeholder="مثال: 87.5" inputmode="decimal">
-      <label class="fld">فرعك</label>
+      <label class="fld" data-t="f1.pct">نسبتك في الثانوية ٪</label>
+      <input type="number" id="in-pct" min="50" max="100" step="0.1" placeholder="مثال: 87.5" inputmode="decimal" data-t-ph="f1.pctPh">
+      <label class="fld" data-t="f1.branch">فرعك</label>
       <div class="chips">
-        <button class="chip" id="br-sci" onclick="setBranch('علمي')">علمي 🔬</button>
-        <button class="chip" id="br-art" onclick="setBranch('أدبي')">أدبي 📖</button>
+        <button class="chip" id="br-sci" onclick="setBranch('علمي')" data-t="f1.sci">علمي 🔬</button>
+        <button class="chip" id="br-art" onclick="setBranch('أدبي')" data-t="f1.art">أدبي 📖</button>
       </div>
-      <label class="fld">درجات القدرات <span class="muted" style="font-weight:400; font-size:.85rem">(اختياري — لو تعرفها)</span></label>
+      <label class="fld" data-t="f1.apt">درجات القدرات <span class="muted" style="font-weight:400; font-size:.85rem">(اختياري — لو تعرفها)</span></label>
       <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
-        <input type="number" id="in-eng" min="0" max="100" placeholder="إنجليزي" inputmode="decimal">
-        <input type="number" id="in-math" min="0" max="100" placeholder="رياضيات" inputmode="decimal">
-        <input type="number" id="in-arb" min="0" max="100" placeholder="عربي" inputmode="decimal">
+        <input type="number" id="in-eng" min="0" max="100" placeholder="إنجليزي" inputmode="decimal" data-t-ph="f1.engPh">
+        <input type="number" id="in-math" min="0" max="100" placeholder="رياضيات" inputmode="decimal" data-t-ph="f1.mathPh">
+        <input type="number" id="in-arb" min="0" max="100" placeholder="عربي" inputmode="decimal" data-t-ph="f1.arbPh">
       </div>
-      <p class="muted" style="font-size:.82rem; margin-top:8px">تركها فاضية ما يمنع الترشيح — بس الأهلية بتكون «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.</p>
+      <p class="muted" style="font-size:.82rem; margin-top:8px" data-t="f1.aptNote">تركها فاضية ما يمنع الترشيح — بس الأهلية بتكون «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.</p>
     </div>
 
     <!-- خطوة 2: الميول -->
     <div id="fstep2" style="display:none">
-      <h2>شنو يشبهك؟ 🧭</h2>
-      <p class="muted">اختر اللي تحس إنه فعلًا أنت — مو اللي ودك تكونه.</p>
-      <label class="fld">مجالات تستمتع فيها وتتفوق فيها (اختر واحدًا على الأقل)</label>
+      <h2 data-t="f2.title">شنو يشبهك؟ 🧭</h2>
+      <p class="muted" data-t="f2.sub">اختر اللي تحس إنه فعلًا أنت — مو اللي ودك تكونه.</p>
+      <label class="fld" data-t="f2.interests">مجالات تستمتع فيها وتتفوق فيها (اختر واحدًا على الأقل)</label>
       <div class="chips" id="chips-interests">
-        <button class="chip" data-v="علوم" onclick="pickMany(this)">علوم وأحياء 🧬</button>
-        <button class="chip" data-v="تقنية" onclick="pickMany(this)">تقنية وبرمجة 💻</button>
-        <button class="chip" data-v="أرقام" onclick="pickMany(this)">أرقام وتحليل 📊</button>
-        <button class="chip" data-v="ناس" onclick="pickMany(this)">فهم الناس 🤝</button>
-        <button class="chip" data-v="كتابة" onclick="pickMany(this)">كتابة وإقناع ✍️</button>
-        <button class="chip" data-v="تصميم" onclick="pickMany(this)">تصميم وإبداع 🎨</button>
-        <button class="chip" data-v="إدارة" onclick="pickMany(this)">تنظيم وقيادة 🧩</button>
-        <button class="chip" data-v="خدمة" onclick="pickMany(this)">رعاية وخدمة 🩺</button>
+        <button class="chip" data-v="علوم" onclick="pickMany(this)" data-t="f2.i1">علوم وأحياء 🧬</button>
+        <button class="chip" data-v="تقنية" onclick="pickMany(this)" data-t="f2.i2">تقنية وبرمجة 💻</button>
+        <button class="chip" data-v="أرقام" onclick="pickMany(this)" data-t="f2.i3">أرقام وتحليل 📊</button>
+        <button class="chip" data-v="ناس" onclick="pickMany(this)" data-t="f2.i4">فهم الناس 🤝</button>
+        <button class="chip" data-v="كتابة" onclick="pickMany(this)" data-t="f2.i5">كتابة وإقناع ✍️</button>
+        <button class="chip" data-v="تصميم" onclick="pickMany(this)" data-t="f2.i6">تصميم وإبداع 🎨</button>
+        <button class="chip" data-v="إدارة" onclick="pickMany(this)" data-t="f2.i7">تنظيم وقيادة 🧩</button>
+        <button class="chip" data-v="خدمة" onclick="pickMany(this)" data-t="f2.i8">رعاية وخدمة 🩺</button>
       </div>
-      <label class="fld">يوم شغلك المثالي بعد عشر سنين</label>
+      <label class="fld" data-t="f2.life">يوم شغلك المثالي بعد عشر سنين</label>
       <div class="chips" id="chips-life">
-        <button class="chip" data-v="مكتب" onclick="pickMany(this)">مكتب هادئ 🖥️</button>
-        <button class="chip" data-v="ميدان" onclick="pickMany(this)">حركة وميدان 🏗️</button>
-        <button class="chip" data-v="ورديات" onclick="pickMany(this)">ورديات مرنة 🕐</button>
-        <button class="chip" data-v="جمهور" onclick="pickMany(this)">تعامل مع جمهور 🗣️</button>
-        <button class="chip" data-v="بحث" onclick="pickMany(this)">بحث وتعمق 🔍</button>
+        <button class="chip" data-v="مكتب" onclick="pickMany(this)" data-t="f2.l1">مكتب هادئ 🖥️</button>
+        <button class="chip" data-v="ميدان" onclick="pickMany(this)" data-t="f2.l2">حركة وميدان 🏗️</button>
+        <button class="chip" data-v="ورديات" onclick="pickMany(this)" data-t="f2.l3">ورديات مرنة 🕐</button>
+        <button class="chip" data-v="جمهور" onclick="pickMany(this)" data-t="f2.l4">تعامل مع جمهور 🗣️</button>
+        <button class="chip" data-v="بحث" onclick="pickMany(this)" data-t="f2.l5">بحث وتعمق 🔍</button>
       </div>
     </div>
 
     <div class="navrow">
-      <button class="btn btn-ghost" id="btn-back" onclick="formNav(-1)">رجوع</button>
+      <button class="btn btn-ghost" id="btn-back" onclick="formNav(-1)" data-t="nav.back">رجوع</button>
       <button class="btn btn-primary" id="btn-next" onclick="formNav(1)">كمّل ←</button>
     </div>
   </div>
@@ -170,13 +170,13 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══════ النتيجة ═══════ -->
 <section id="s-result" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="restart()">↺ من جديد</button></div>
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="restart()" data-t="r.toprestart">↺ من جديد</button></div>
 
     <div id="deadline-box"></div>
 
     <!-- 1) التخصص المقترح -->
     <div class="card" style="border-color:var(--brand); box-shadow:0 0 0 3px rgba(79,124,255,.15)">
-      <p class="muted" style="font-size:.85rem; margin-bottom:6px">ترشيحنا الأول لك</p>
+      <p class="muted" style="font-size:.85rem; margin-bottom:6px" data-t="r.kicker">ترشيحنا الأول لك</p>
       <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap">
         <div style="flex:1; min-width:200px">
           <h2 id="r-name" style="font-size:1.5rem"></h2>
@@ -185,7 +185,7 @@ table.admin th{color:var(--muted); font-weight:700}
         </div>
         <div style="text-align:center">
           <div class="hero-pct" id="r-fit"></div>
-          <div class="muted" style="font-size:.78rem">توافق معك</div>
+          <div class="muted" style="font-size:.78rem" data-t="r.fitLbl">توافق معك</div>
         </div>
       </div>
       <p id="r-desc" style="margin-top:16px; font-size:1.02rem"></p>
@@ -194,71 +194,71 @@ table.admin th{color:var(--muted); font-weight:700}
       <p class="muted" id="r-verify" style="font-size:.78rem; margin-top:12px"></p>
     </div>
 
-    <button class="btn btn-ghost btn-block" style="margin-bottom:16px" onclick="shareApp()">📤 شارك قراري مع زميل يحتار مثلك</button>
-    <p id="share-note" style="display:none; color:var(--green); font-weight:700; text-align:center; margin:-8px 0 16px">✓ تم</p>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:16px" onclick="shareApp()" data-t="r.share">📤 شارك قراري مع زميل يحتار مثلك</button>
+    <p id="share-note" style="display:none; color:var(--green); font-weight:700; text-align:center; margin:-8px 0 16px" data-t="r.shareDone">✓ تم</p>
 
     <!-- 2) لماذا رشحنا لك -->
     <div class="card">
-      <h3 style="margin-bottom:6px">ليش رشحنا لك هذا التخصص؟</h3>
+      <h3 style="margin-bottom:6px" data-t="r.whyTitle">ليش رشحنا لك هذا التخصص؟</h3>
       <div id="r-reasons"></div>
     </div>
 
     <!-- 3) بصراحة معك -->
     <div class="card" style="border-right:4px solid var(--amber)">
-      <h3 style="margin-bottom:10px">بصراحة معك 🧡</h3>
+      <h3 style="margin-bottom:10px" data-t="r.honestTitle">بصراحة معك 🧡</h3>
       <div id="r-honest"></div>
     </div>
 
     <!-- 3) ما الذي قد يغيّر التوصية -->
     <div class="card">
-      <h3 style="margin-bottom:10px">شنو اللي ممكن يغيّر التوصية؟</h3>
+      <h3 style="margin-bottom:10px" data-t="r.changeTitle">شنو اللي ممكن يغيّر التوصية؟</h3>
       <div id="r-changers"></div>
     </div>
 
     <!-- 4) الخطوة التالية -->
     <div class="card" style="border-right:4px solid var(--gold)">
-      <h3 style="margin-bottom:10px">خطوتك الجاية ✅</h3>
+      <h3 style="margin-bottom:10px" data-t="r.nextTitle">خطوتك الجاية ✅</h3>
       <div id="r-next"></div>
     </div>
 
     <!-- 5) المصادر الرسمية -->
     <div class="card">
-      <h3 style="margin-bottom:6px">المصادر الرسمية</h3>
-      <p class="muted" style="font-size:.85rem; margin-bottom:14px">لا تنسخ قرارك من عندنا فقط — راجع المصدر بنفسك قبل التقديم.</p>
+      <h3 style="margin-bottom:6px" data-t="r.srcTitle">المصادر الرسمية</h3>
+      <p class="muted" style="font-size:.85rem; margin-bottom:14px" data-t="r.srcSub">لا تنسخ قرارك من عندنا فقط — راجع المصدر بنفسك قبل التقديم.</p>
       <div id="r-sources"></div>
     </div>
 
     <!-- سؤال التغذية الراجعة -->
     <div class="card" id="feedback-card">
-      <h3 style="margin-bottom:6px">هل وضحت لك الصورة؟ 🤔</h3>
-      <p class="muted" style="font-size:.85rem; margin-bottom:12px">إجابتك مجهولة وتساعدنا نحسّن التوصية.</p>
+      <h3 style="margin-bottom:6px" data-t="r.fbTitle">هل وضحت لك الصورة؟ 🤔</h3>
+      <p class="muted" style="font-size:.85rem; margin-bottom:12px" data-t="r.fbSub">إجابتك مجهولة وتساعدنا نحسّن التوصية.</p>
       <div class="chips">
-        <button class="chip" onclick="sendFeedback('نعم تمامًا')">نعم تمامًا 👍</button>
-        <button class="chip" onclick="sendFeedback('جزئيًا')">جزئيًا 🤏</button>
-        <button class="chip" onclick="sendFeedback('لا بعد')">لا بعد 😕</button>
+        <button class="chip" onclick="sendFeedback('نعم تمامًا')" data-t="r.fb1">نعم تمامًا 👍</button>
+        <button class="chip" onclick="sendFeedback('جزئيًا')" data-t="r.fb2">جزئيًا 🤏</button>
+        <button class="chip" onclick="sendFeedback('لا بعد')" data-t="r.fb3">لا بعد 😕</button>
       </div>
-      <p id="feedback-thanks" style="display:none; color:var(--green); font-weight:700; margin-top:12px">✓ وصلت إجابتك — شكرًا لك 🤍</p>
+      <p id="feedback-thanks" style="display:none; color:var(--green); font-weight:700; margin-top:12px" data-t="r.fbThanks">✓ وصلت إجابتك — شكرًا لك 🤍</p>
     </div>
 
     <!-- بدائل -->
-    <p class="muted" style="font-weight:800; margin:22px 0 10px">خيارات قريبة منك (خياران بس، ما نرجع نشتتك):</p>
+    <p class="muted" style="font-weight:800; margin:22px 0 10px" data-t="r.altsTitle">خيارات قريبة منك (خياران بس، ما نرجع نشتتك):</p>
     <div id="r-alts"></div>
 
     <!-- شلون عرفت عنا -->
     <div class="card" id="acq-card">
-      <h3 style="margin-bottom:10px; font-size:1rem">شلون عرفت عن قراري؟ 👂</h3>
+      <h3 style="margin-bottom:10px; font-size:1rem" data-t="r.acqTitle">شلون عرفت عن قراري؟ 👂</h3>
       <div class="chips">
-        <button class="chip" onclick="sendAcquisition(this,'صديق')">صديق</button>
-        <button class="chip" onclick="sendAcquisition(this,'واتساب')">واتساب</button>
-        <button class="chip" onclick="sendAcquisition(this,'إنستغرام')">إنستغرام</button>
-        <button class="chip" onclick="sendAcquisition(this,'تيك توك')">تيك توك</button>
-        <button class="chip" onclick="sendAcquisition(this,'بحث قوقل')">بحث قوقل</button>
-        <button class="chip" onclick="sendAcquisition(this,'مدرسة أو مرشد')">مدرسة أو مرشد</button>
-        <button class="chip" onclick="sendAcquisition(this,'غير ذلك')">غير ذلك</button>
+        <button class="chip" onclick="sendAcquisition(this,'صديق')" data-t="r.acq1">صديق</button>
+        <button class="chip" onclick="sendAcquisition(this,'واتساب')" data-t="r.acq2">واتساب</button>
+        <button class="chip" onclick="sendAcquisition(this,'إنستغرام')" data-t="r.acq3">إنستغرام</button>
+        <button class="chip" onclick="sendAcquisition(this,'تيك توك')" data-t="r.acq4">تيك توك</button>
+        <button class="chip" onclick="sendAcquisition(this,'بحث قوقل')" data-t="r.acq5">بحث قوقل</button>
+        <button class="chip" onclick="sendAcquisition(this,'مدرسة أو مرشد')" data-t="r.acq6">مدرسة أو مرشد</button>
+        <button class="chip" onclick="sendAcquisition(this,'غير ذلك')" data-t="r.acq7">غير ذلك</button>
       </div>
     </div>
 
-    <button class="btn btn-ghost btn-block" style="margin-bottom:14px" onclick="buildParent();go('s-parent')">👨‍👩‍👦 اعرض نسخة ولي الأمر — أداة نقاش عائلي</button>
+    <button class="btn btn-ghost btn-block" style="margin-bottom:14px" onclick="buildParent();go('s-parent')" data-t="r.parentBtn">👨‍👩‍👦 اعرض نسخة ولي الأمر — أداة نقاش عائلي</button>
 
     <p class="foot" id="r-foot"></p>
   </div>
@@ -267,9 +267,9 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══════ وضع ولي الأمر ═══════ -->
 <section id="s-parent" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="go('s-result')">← رجوع للنتيجة</button></div>
-    <h2 style="margin:12px 0 4px">نسخة ولي الأمر 👨‍👩‍👦</h2>
-    <p class="muted" style="margin-bottom:16px">هذا التقرير أداة نقاش عائلي واعٍ — مو قرار نهائي عن ولدكم.</p>
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="go('s-result')" data-t="pt.back">← رجوع للنتيجة</button></div>
+    <h2 style="margin:12px 0 4px" data-t="pt.title">نسخة ولي الأمر 👨‍👩‍👦</h2>
+    <p class="muted" style="margin-bottom:16px" data-t="pt.sub">هذا التقرير أداة نقاش عائلي واعٍ — مو قرار نهائي عن ولدكم.</p>
     <div id="parent-report"></div>
   </div>
 </section>
@@ -286,9 +286,19 @@ table.admin th{color:var(--muted); font-weight:700}
         <input type="password" id="admin-pass" placeholder="كلمة المرور" autocomplete="current-password" style="width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg2); color:var(--ink); font-family:inherit; font-size:1rem; margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()">
         <button class="btn btn-primary btn-block" onclick="adminLogin()">دخول</button>
         <p id="admin-err" style="display:none; color:var(--red); margin-top:10px; font-weight:700"></p>
+        <button class="btn btn-ghost btn-block" id="admin-local-btn" style="display:none; margin-top:10px" onclick="showAdminBody()">👁 معاينة محلية بدون حساب — تعديلات المحتوى تبقى على هذا الجهاز فقط</button>
       </div>
     </div>
     <div id="admin-body" style="display:none">
+      <!-- ═══ إدارة المحتوى (CMS) ═══ -->
+      <h2 style="margin:10px 0 4px">إدارة المحتوى 📝</h2>
+      <p class="muted" id="cms-mode" style="margin-bottom:14px; font-size:.85rem"></p>
+      <div class="card" style="margin-bottom:26px">
+        <div id="cms-form"></div>
+        <button class="btn btn-primary btn-block" onclick="saveCMS()">💾 حفظ ونشر التعديلات</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="resetCMS()">↺ استعادة النصوص الافتراضية</button>
+        <p id="cms-status" style="display:none; margin-top:10px; font-weight:700"></p>
+      </div>
       <h2 style="margin:10px 0 4px">لوحة التحليلات المركزية 📊</h2>
       <p class="muted" id="admin-status" style="margin-bottom:16px"></p>
       <div class="stat-grid" id="admin-stats"></div>
@@ -311,7 +321,7 @@ table.admin th{color:var(--muted); font-weight:700}
    (نسخة 2026/2027 لم تُنشر وقت التحقق).
    لا نعرض قبولًا مضمونًا — أهلية + توصية + خطوة تالية فقط.
    ════════════════════════════════════════════════════════════ */
-const VERIFIED_AT = '26 يوليو 2026';
+/* تاريخ آخر تحقق أصبح نصًا قابلًا للتحرير من لوحة الإدارة (المفتاح meta.verifiedAt) */
 const APPLY_CLOSE = new Date('2026-07-28T10:00:00+03:00');
 
 const SRC = {
@@ -387,6 +397,352 @@ const PROGRAMS = [
 const S = { status:null, pct:null, branch:null, eng:null, math:null, arb:null, interests:[], life:[] };
 let step = 1, RESULTS = [];
 
+/* ═══════════════ طبقة إدارة المحتوى (CMS) ═══════════════
+   كل نص ظاهر في الموقع له مفتاح هنا. الافتراضي يعيش في الكود،
+   وأي تعديل من لوحة الإدارة يُحفظ في Supabase (جدول content)
+   فيُدمج فوق الافتراضي لجميع الزوار — بدون إعادة نشر.
+   عناصر HTML الثابتة تُربط عبر سمة data-t، ونصوص JS عبر T(). */
+const DEFAULT_TEXTS = {
+  /* الصفحة الرئيسية */
+  'w.title':    'نضيّق خياراتك،\nونوضح لك الخطوة الجاية',
+  'w.subtitle': 'جاوب على كم سؤال، ونقارن إجاباتك بشروط القبول والمصادر الرسمية.',
+  'w.cta':      'ابدأ تقييمك المجاني ←',
+  'w.trust':    '🔒 كل معلومة مرتبطة بمصدر رسمي وتاريخ آخر تحقق',
+  'w.footer':   'قراري © 2026 · صُنع في الكويت 🇰🇼 · قبل لا تقدم… ادخل قراري',
+  /* شريط الخصوصية */
+  'c.text': '🔒 <strong style="color:var(--ink)">خصوصيتك أولًا:</strong> نجمع إحصاءات استخدام مجهولة تمامًا — بدون اسم أو رقم مدني أو هاتف — لتحسين قراري. درجاتك واختياراتك التفصيلية لا تُرسل أبدًا، فقط نوع الحدث (مثل: بدأ، أكمل، ضغط مصدر).',
+  'c.yes': 'موافق', 'c.no': 'لا، شكرًا',
+  /* النموذج — الخطوة 1 */
+  'f.topback': '← رجوع',
+  'f1.title': 'أرقامك أولًا 🧮',
+  'f1.sub': 'هذي تحدد أهليتك الرسمية — جاوب بدقة، النتيجة لك وحدك.',
+  'f1.status': 'حالتك الحين',
+  'f1.st1': 'في ثاني عشر 📚', 'f1.st2': 'خريج هالسنة 🎓', 'f1.st3': 'خريج سنة سابقة 🗂️',
+  'f1.pct': 'نسبتك في الثانوية ٪', 'f1.pctPh': 'مثال: 87.5',
+  'f1.branch': 'فرعك', 'f1.sci': 'علمي 🔬', 'f1.art': 'أدبي 📖',
+  'f1.apt': 'درجات القدرات ',
+  'f1.engPh': 'إنجليزي', 'f1.mathPh': 'رياضيات', 'f1.arbPh': 'عربي',
+  'f1.aptNote': 'تركها فاضية ما يمنع الترشيح — بس الأهلية بتكون «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.',
+  /* النموذج — الخطوة 2 */
+  'f2.title': 'شنو يشبهك؟ 🧭',
+  'f2.sub': 'اختر اللي تحس إنه فعلًا أنت — مو اللي ودك تكونه.',
+  'f2.interests': 'مجالات تستمتع فيها وتتفوق فيها (اختر واحدًا على الأقل)',
+  'f2.i1': 'علوم وأحياء 🧬', 'f2.i2': 'تقنية وبرمجة 💻', 'f2.i3': 'أرقام وتحليل 📊', 'f2.i4': 'فهم الناس 🤝',
+  'f2.i5': 'كتابة وإقناع ✍️', 'f2.i6': 'تصميم وإبداع 🎨', 'f2.i7': 'تنظيم وقيادة 🧩', 'f2.i8': 'رعاية وخدمة 🩺',
+  'f2.life': 'يوم شغلك المثالي بعد عشر سنين',
+  'f2.l1': 'مكتب هادئ 🖥️', 'f2.l2': 'حركة وميدان 🏗️', 'f2.l3': 'ورديات مرنة 🕐', 'f2.l4': 'تعامل مع جمهور 🗣️', 'f2.l5': 'بحث وتعمق 🔍',
+  /* التنقل ورسائل الخطأ */
+  'nav.back': 'رجوع', 'nav.next': 'كمّل ←', 'nav.final': 'شوف ترشيحي 🎯',
+  'err.pct': 'أدخل نسبتك بين 50 و 100', 'err.branch': 'اختر فرعك أولًا', 'err.interests': 'اختر مجالًا واحدًا على الأقل يشدك',
+  /* صفحة النتيجة — ثابتة */
+  'r.toprestart': '↺ من جديد',
+  'r.kicker': 'ترشيحنا الأول لك', 'r.fitLbl': 'توافق معك',
+  'r.share': '📤 شارك قراري مع زميل يحتار مثلك', 'r.shareDone': '✓ تم',
+  'r.whyTitle': 'ليش رشحنا لك هذا التخصص؟',
+  'r.honestTitle': 'بصراحة معك 🧡',
+  'r.changeTitle': 'شنو اللي ممكن يغيّر التوصية؟',
+  'r.nextTitle': 'خطوتك الجاية ✅',
+  'r.srcTitle': 'المصادر الرسمية',
+  'r.srcSub': 'لا تنسخ قرارك من عندنا فقط — راجع المصدر بنفسك قبل التقديم.',
+  'r.fbTitle': 'هل وضحت لك الصورة؟ 🤔', 'r.fbSub': 'إجابتك مجهولة وتساعدنا نحسّن التوصية.',
+  'r.fb1': 'نعم تمامًا 👍', 'r.fb2': 'جزئيًا 🤏', 'r.fb3': 'لا بعد 😕',
+  'r.fbThanks': '✓ وصلت إجابتك — شكرًا لك 🤍',
+  'r.altsTitle': 'خيارات قريبة منك (خياران بس، ما نرجع نشتتك):',
+  'r.acqTitle': 'شلون عرفت عن قراري؟ 👂',
+  'r.acq1': 'صديق', 'r.acq2': 'واتساب', 'r.acq3': 'إنستغرام', 'r.acq4': 'تيك توك',
+  'r.acq5': 'بحث قوقل', 'r.acq6': 'مدرسة أو مرشد', 'r.acq7': 'غير ذلك',
+  'r.parentBtn': '👨‍👩‍👦 اعرض نسخة ولي الأمر — أداة نقاش عائلي',
+  /* صفحة النتيجة — مولّدة */
+  'r.eligOk': '✓ مؤهل رسميًا', 'r.eligNo': '✗ غير مؤهل', 'r.eligQ': '؟ يحتاج تحقق',
+  'r.axFit': 'توافق الميول', 'r.axElig': 'الأهلية الرسمية', 'r.axComp': 'المنافسة المتوقعة', 'r.axLife': 'نمط الدراسة والعمل',
+  'r.axOk': 'مؤهل رسميًا ✓', 'r.axNo': 'غير مؤهل ✗', 'r.axQ': 'يحتاج تحقق ؟',
+  'r.compNone': 'لا تتوفر بيانات كافية',
+  'r.lifeNone': 'لم تجب على أسئلة نمط العمل', 'r.lifeYes': 'ملائم لتفضيلاتك ({hits})', 'r.lifeNo': 'ما تطابق واضح مع تفضيلاتك',
+  'r.verify': 'بيانات الأهلية: مصادر رسمية · آخر تحقق {verified} · أوزان المعدل المكافئ 2025/2026',
+  'r.countOpen': '⏳ <strong>نافذة التقديم لجامعة الكويت مفتوحة الآن</strong> — يتبقى {left} على الإغلاق (الثلاثاء 28 يوليو، 10 صباحًا) — <strong>مصدر رسمي موثق</strong>',
+  'r.countClosed': 'انتهت نافذة الفصل الأول (18–28 يوليو 2026). الكليات المقيدة بالفصل الأول لا تقبل الآن — تابع إعلان الفصل الثاني من المصدر الرسمي.',
+  'r.honestNoScores': 'ما أدخلت درجات القدرات — عشان كذا ما نقدر نحسب معدلك المكافئ ولا نجزم أهليتك للكليات اللي تعتمده.',
+  'r.honestNoComp': 'معدلات القبول الفعلية للسنوات السابقة غير منشورة في مصدر رسمي وصلنا له — عشان كذا «المنافسة المتوقعة» بدون بيانات، وما نبي نخمّن لك رقم.',
+  'r.honestMin': 'الحد الأدنى العام لنسبة القبول بالجامعة: بانتظار التحديث الرسمي من الجهة.',
+  'r.honestInterview': 'هذا المسار يشترط مقابلة شخصية بعد القبول — جهّز لها من بدري.',
+  'r.honestWeights': 'نعتمد أوزان 2025/2026 الموثقة؛ جدول 2026/2027 بانتظار التحديث الرسمي من الجهة وقد تتغير الأوزان.',
+  'r.nextNow': 'الآن:', 'r.nextBefore': 'قبل القفل:', 'r.nextAsk': 'عند السؤال:',
+  'r.nextOrder': 'رتّب رغباتك داخل طلب الالتحاق بأكبر عدد ممكن — الدليل الرسمي ينصح بذلك، ولا يمكن التعديل بعد إغلاق الفترة.',
+  'r.nextEmail': 'راسل عمادة القبول والتسجيل admission@ku.edu.kw (موثق في الدليل الرسمي).',
+  'r.foot': 'قراري لا يعد بقبول — يوضّح أهليتك الرسمية وخطوتك التالية.\nالقرار النهائي للقبول لعمادة القبول والتسجيل وحدها · آخر تحقق من المصادر: {verified}',
+  /* أسباب التوصية */
+  'rs.hits': 'اخترت أنك تستمتع بـ«{hits}» — وهذا صلب مواد التخصص ويومياته، مو هامشه. التخصص اللي يشبه اهتمامك تُكمله، واللي يخالفه تعاني فيه.',
+  'rs.minCert': 'نسبتك {pct}٪ تتجاوز شرط الكلية الموثق ({min}٪ فأعلى) — تدخل المنافسة وأنت مستوفٍ للأهلية الرسمية.',
+  'rs.direct': 'قبول هذه الكلية يعتمد على نسبة الثانوية مباشرة، ونسبتك {pct}٪ مدخلك الكامل — لا تحتاج أي درجة قدرات للتنافس هنا.',
+  'rs.adj': 'بدرجات قدراتك، معدلك المكافئ التقريبي {adj} ({formula}).',
+  'rs.needs': 'بصراحة معك: ما نقدر نجزم أهليتك الرسمية قبل ما تكمل البيان الناقص — {note}. والقدرات في يدك: الجامعة تسمح بثلاث محاولات بالسنة وتحتسب أعلى نتيجة.',
+  'rs.life': 'تتقبل «{hits}» في يوم شغلك — وهذا واقع المهنة اليومي بعد التخرج. كثير يكتشف هذا المتأخر، أنت تعرفه من الآن.',
+  /* ما الذي يغيّر التوصية */
+  'ch.apt': '<strong>درجات القدرات:</strong> الجامعة تسمح بثلاث محاولات في السنة وتحتسب أعلى نتيجة — تحسين درجتك يرفع معدلك المكافئ وقد يفتح لك كليات أعلى.',
+  'ch.interests': '<strong>تغيّر اهتماماتك:</strong> التوصية مبنية على إجاباتك اليوم. لو اكتشفت ميلًا جديدًا خلال الصيف، أعد التقييم — الميول تتضح بالتجربة.',
+  'ch.level': '<strong>تحسّن أو انخفاض مستواك الدراسي:</strong> نسبة الثانوية النهائية هي المدخل الرسمي الأول لأي كلية.',
+  'ch.goal': '<strong>تغيّر هدفك المهني:</strong> لو تبدلت أولويتك (تخصص تحبه ↔ أولوية القبول ↔ وظيفة أسرع) فالترتيب الصحيح لرغباتك يتغير معها.',
+  'ch.rules': '<strong>تحديث الشروط الرسمية:</strong> أوزان 2026/2027 لم تُنشر بعد؛ نعتمد جدول 2025/2026 الموثق وقد يُحدَّث — راجع المصدر الرسمي قبل التقديم.',
+  /* ولي الأمر */
+  'pt.title': 'نسخة ولي الأمر 👨‍👩‍👦', 'pt.back': '← رجوع للنتيجة',
+  'pt.sub': 'هذا التقرير أداة نقاش عائلي واعٍ — مو قرار نهائي عن ولدكم.',
+  'pt.r1': 'التخصص المرشح', 'pt.r2': 'ليش رُشح لولدكم؟', 'pt.r3': 'هل هو مؤهل رسميًا؟',
+  'pt.r4': 'المنافسة المتوقعة', 'pt.r5': 'المخاطر والنواقص', 'pt.r6': 'البدائل القريبة', 'pt.r7': 'الخطوة التالية',
+  'pt.compNone': 'لا تتوفر بيانات كافية من مصدر رسمي — لا نعرض رقمًا غير موثق',
+  'pt.risks': 'درجات القدرات تغيّر المعدل المكافئ بشكل كبير · أوزان 2026/2027 بانتظار التحديث الرسمي من الجهة · نافذة التقديم قصيرة',
+  'pt.axOk': 'مؤهل رسميًا ✓', 'pt.axNo': 'غير مؤهل ✗ — {note}', 'pt.axQ': 'يحتاج تحقق ؟ — {note}',
+  'pt.altOk': 'مؤهل', 'pt.altQ': 'يحتاج تحقق',
+  'pt.qTitle': 'أسئلة تناقشونها كعائلة 🏠',
+  'pt.q1': 'هل الأولوية للتخصص اللي يحبه، ولا للقبول الأسرع، ولا لسوق العمل؟',
+  'pt.q2': 'هل نتقبل نمط حياة المهنة اليومي (ورديات، ميدان، جمهور) وليس فقط عنوانها؟',
+  'pt.q3': 'هل درجات القدرات تحتاج إعادة قبل قفل التقديم؟ الجامعة تحتسب أعلى محاولة.',
+  'pt.q4': 'شنو الخطة البديلة إذا ما انقبل في رغبته الأولى؟',
+  'pt.foot': 'بيانات الأهلية من مصادر جامعة الكويت الرسمية · آخر تحقق {verified}',
+  /* المشاركة */
+  'sh.text': 'طلع لي أقرب مسار: {rec} 🎯\nجرّب «قراري» وشوف شنو يناسبك — توصية من مصادر جامعة الكويت الرسمية:',
+  /* عام */
+  'meta.verifiedAt': '26 يوليو 2026',
+  /* المصادر الرسمية (أسماء وروابط) */
+  'src.portalLbl': SRC.portal.label, 'src.portalUrl': SRC.portal.url,
+  'src.newsLbl': SRC.news.label, 'src.newsUrl': SRC.news.url,
+  'src.weightsLbl': SRC.weights.label, 'src.weightsUrl': SRC.weights.url,
+  'src.rulesLbl': SRC.rules.label, 'src.rulesUrl': SRC.rules.url,
+};
+/* وصف وخطوة كل تخصص — قابلة للتحرير أيضًا */
+PROGRAMS.forEach(function(p){
+  DEFAULT_TEXTS['prog.'+p.id+'.desc'] = p.desc;
+  DEFAULT_TEXTS['prog.'+p.id+'.next'] = p.next;
+});
+
+let TEXTS = Object.assign({}, DEFAULT_TEXTS);
+function T(k){ return TEXTS[k] !== undefined ? TEXTS[k] : DEFAULT_TEXTS[k]; }
+function tpl(s, m){ return String(s).replace(/\{(\w+)\}/g, function(_,k){ return (m && m[k] !== undefined) ? m[k] : '{'+k+'}'; }); }
+
+/* تطبيق النصوص على عناصر HTML الثابتة (سمة data-t) */
+function applyTexts(){
+  document.querySelectorAll('[data-t]').forEach(function(el){
+    const v = T(el.getAttribute('data-t'));
+    if(v === undefined || v === null) return;
+    if(el.hasAttribute('data-t-html')){ el.innerHTML = String(v).replace(/\n/g,'<br>'); return; }
+    if(el.childNodes.length && el.childNodes[0].nodeType === 3){ el.childNodes[0].nodeValue = v; }
+    else el.textContent = v;
+  });
+  document.querySelectorAll('[data-t-ph]').forEach(function(el){
+    const v = T(el.getAttribute('data-t-ph'));
+    if(v !== undefined && v !== null) el.placeholder = v;
+  });
+  const bn = document.getElementById('btn-next');
+  if(bn) bn.textContent = (step === 2) ? T('nav.final') : T('nav.next');
+}
+/* حقن نصوص التخصصات والمصادر المعدّلة في بيانات التشغيل */
+function applyProgramTexts(){
+  PROGRAMS.forEach(function(p){ p.desc = T('prog.'+p.id+'.desc'); p.next = T('prog.'+p.id+'.next'); });
+  SRC.portal.label = T('src.portalLbl');   SRC.portal.url = T('src.portalUrl');
+  SRC.news.label = T('src.newsLbl');       SRC.news.url = T('src.newsUrl');
+  SRC.weights.label = T('src.weightsLbl'); SRC.weights.url = T('src.weightsUrl');
+  SRC.rules.label = T('src.rulesLbl');     SRC.rules.url = T('src.rulesUrl');
+}
+function applyAllTexts(){ applyProgramTexts(); applyTexts(); }
+
+/* جلب المحتوى: المنشور مركزيًا أولًا، ثم النسخة المحلية، ثم الافتراضي */
+async function loadContent(){
+  let remote = null;
+  if(sb){
+    try{
+      const { data } = await sb.from('content').select('texts').eq('id',1).maybeSingle();
+      if(data && data.texts && Object.keys(data.texts).length) remote = data.texts;
+    }catch(_){}
+  }
+  let local = null;
+  try{ local = JSON.parse(localStorage.getItem('qarari_cms_override') || 'null'); }catch(_){}
+  TEXTS = Object.assign({}, DEFAULT_TEXTS, remote || local || {});
+  applyAllTexts();
+}
+
+/* مخطط حقول لوحة إدارة المحتوى */
+const CMS_SCHEMA = [
+  {k:'w.title', g:'الصفحة الرئيسية', l:'العنوان الرئيسي', m:1},
+  {k:'w.subtitle', g:'الصفحة الرئيسية', l:'الوصف تحت العنوان', m:1},
+  {k:'w.cta', g:'الصفحة الرئيسية', l:'زر البدء'},
+  {k:'w.trust', g:'الصفحة الرئيسية', l:'رسالة الثقة (الخضراء)'},
+  {k:'w.footer', g:'الصفحة الرئيسية', l:'سطر التذييل'},
+  {k:'c.text', g:'شريط الخصوصية', l:'نص الخصوصية', m:1},
+  {k:'c.yes', g:'شريط الخصوصية', l:'زر الموافقة'},
+  {k:'c.no', g:'شريط الخصوصية', l:'زر الرفض'},
+  {k:'f1.title', g:'الأسئلة — الخطوة 1', l:'عنوان الخطوة'},
+  {k:'f1.sub', g:'الأسئلة — الخطوة 1', l:'وصف الخطوة'},
+  {k:'f1.status', g:'الأسئلة — الخطوة 1', l:'سؤال الحالة'},
+  {k:'f1.st1', g:'الأسئلة — الخطوة 1', l:'خيار الحالة 1'}, {k:'f1.st2', g:'الأسئلة — الخطوة 1', l:'خيار الحالة 2'}, {k:'f1.st3', g:'الأسئلة — الخطوة 1', l:'خيار الحالة 3'},
+  {k:'f1.pct', g:'الأسئلة — الخطوة 1', l:'سؤال النسبة'}, {k:'f1.pctPh', g:'الأسئلة — الخطوة 1', l:'مثال داخل خانة النسبة'},
+  {k:'f1.branch', g:'الأسئلة — الخطوة 1', l:'سؤال الفرع'},
+  {k:'f1.sci', g:'الأسئلة — الخطوة 1', l:'خيار علمي'}, {k:'f1.art', g:'الأسئلة — الخطوة 1', l:'خيار أدبي'},
+  {k:'f1.apt', g:'الأسئلة — الخطوة 1', l:'سؤال درجات القدرات'},
+  {k:'f1.engPh', g:'الأسئلة — الخطوة 1', l:'خانة الإنجليزية'}, {k:'f1.mathPh', g:'الأسئلة — الخطوة 1', l:'خانة الرياضيات'}, {k:'f1.arbPh', g:'الأسئلة — الخطوة 1', l:'خانة العربية'},
+  {k:'f1.aptNote', g:'الأسئلة — الخطوة 1', l:'ملاحظة ترك القدرات فارغة', m:1},
+  {k:'f2.title', g:'الأسئلة — الخطوة 2', l:'عنوان الخطوة'},
+  {k:'f2.sub', g:'الأسئلة — الخطوة 2', l:'وصف الخطوة'},
+  {k:'f2.interests', g:'الأسئلة — الخطوة 2', l:'سؤال المجالات'},
+  {k:'f2.i1', g:'الأسئلة — الخطوة 2', l:'خيار مجال 1'}, {k:'f2.i2', g:'الأسئلة — الخطوة 2', l:'خيار مجال 2'},
+  {k:'f2.i3', g:'الأسئلة — الخطوة 2', l:'خيار مجال 3'}, {k:'f2.i4', g:'الأسئلة — الخطوة 2', l:'خيار مجال 4'},
+  {k:'f2.i5', g:'الأسئلة — الخطوة 2', l:'خيار مجال 5'}, {k:'f2.i6', g:'الأسئلة — الخطوة 2', l:'خيار مجال 6'},
+  {k:'f2.i7', g:'الأسئلة — الخطوة 2', l:'خيار مجال 7'}, {k:'f2.i8', g:'الأسئلة — الخطوة 2', l:'خيار مجال 8'},
+  {k:'f2.life', g:'الأسئلة — الخطوة 2', l:'سؤال نمط العمل'},
+  {k:'f2.l1', g:'الأسئلة — الخطوة 2', l:'خيار نمط 1'}, {k:'f2.l2', g:'الأسئلة — الخطوة 2', l:'خيار نمط 2'},
+  {k:'f2.l3', g:'الأسئلة — الخطوة 2', l:'خيار نمط 3'}, {k:'f2.l4', g:'الأسئلة — الخطوة 2', l:'خيار نمط 4'}, {k:'f2.l5', g:'الأسئلة — الخطوة 2', l:'خيار نمط 5'},
+  {k:'nav.back', g:'الأزرار والتنقل', l:'زر رجوع (النموذج)'},
+  {k:'nav.next', g:'الأزرار والتنقل', l:'زر التالي'},
+  {k:'nav.final', g:'الأزرار والتنقل', l:'زر عرض النتيجة'},
+  {k:'f.topback', g:'الأزرار والتنقل', l:'زر الرجوع العلوي'},
+  {k:'r.toprestart', g:'الأزرار والتنقل', l:'زر إعادة الرحلة'},
+  {k:'r.kicker', g:'صفحة النتيجة', l:'سطر «ترشيحنا الأول»'},
+  {k:'r.fitLbl', g:'صفحة النتيجة', l:'تسمية نسبة التوافق'},
+  {k:'r.whyTitle', g:'صفحة النتيجة', l:'عنوان: ليش رشحنا'},
+  {k:'r.honestTitle', g:'صفحة النتيجة', l:'عنوان: بصراحة معك'},
+  {k:'r.changeTitle', g:'صفحة النتيجة', l:'عنوان: ما الذي يغيّر التوصية'},
+  {k:'r.nextTitle', g:'صفحة النتيجة', l:'عنوان: الخطوة التالية'},
+  {k:'r.srcTitle', g:'صفحة النتيجة', l:'عنوان: المصادر الرسمية'},
+  {k:'r.srcSub', g:'صفحة النتيجة', l:'وصف قسم المصادر', m:1},
+  {k:'r.altsTitle', g:'صفحة النتيجة', l:'عنوان الخيارات القريبة'},
+  {k:'r.parentBtn', g:'صفحة النتيجة', l:'زر نسخة ولي الأمر'},
+  {k:'r.share', g:'صفحة النتيجة', l:'زر المشاركة'},
+  {k:'r.shareDone', g:'صفحة النتيجة', l:'تأكيد المشاركة'},
+  {k:'r.fbTitle', g:'صفحة النتيجة', l:'سؤال «هل وضحت الصورة؟»'},
+  {k:'r.fbSub', g:'صفحة النتيجة', l:'وصف سؤال التغذية'},
+  {k:'r.fb1', g:'صفحة النتيجة', l:'إجابة 1'}, {k:'r.fb2', g:'صفحة النتيجة', l:'إجابة 2'}, {k:'r.fb3', g:'صفحة النتيجة', l:'إجابة 3'},
+  {k:'r.fbThanks', g:'صفحة النتيجة', l:'شكر بعد الإجابة'},
+  {k:'r.acqTitle', g:'صفحة النتيجة', l:'سؤال «شلون عرفت؟»'},
+  {k:'r.acq1', g:'صفحة النتيجة', l:'قناة 1'}, {k:'r.acq2', g:'صفحة النتيجة', l:'قناة 2'}, {k:'r.acq3', g:'صفحة النتيجة', l:'قناة 3'},
+  {k:'r.acq4', g:'صفحة النتيجة', l:'قناة 4'}, {k:'r.acq5', g:'صفحة النتيجة', l:'قناة 5'}, {k:'r.acq6', g:'صفحة النتيجة', l:'قناة 6'}, {k:'r.acq7', g:'صفحة النتيجة', l:'قناة 7'},
+  {k:'r.eligOk', g:'حالات الأهلية', l:'شارة: مؤهل'}, {k:'r.eligNo', g:'حالات الأهلية', l:'شارة: غير مؤهل'}, {k:'r.eligQ', g:'حالات الأهلية', l:'شارة: يحتاج تحقق'},
+  {k:'r.axFit', g:'المحاور الأربعة', l:'محور 1'}, {k:'r.axElig', g:'المحاور الأربعة', l:'محور 2'},
+  {k:'r.axComp', g:'المحاور الأربعة', l:'محور 3'}, {k:'r.axLife', g:'المحاور الأربعة', l:'محور 4'},
+  {k:'r.compNone', g:'المحاور الأربعة', l:'نص «لا تتوفر بيانات»'},
+  {k:'r.lifeNone', g:'المحاور الأربعة', l:'نمط العمل: بلا إجابة', m:1},
+  {k:'r.lifeYes', g:'المحاور الأربعة', l:'نمط العمل: ملائم — {hits} تُستبدل بالتطابقات', m:1},
+  {k:'r.lifeNo', g:'المحاور الأربعة', l:'نمط العمل: غير متطابق', m:1},
+  {k:'r.verify', g:'رسائل التحقق', l:'سطر آخر تحقق — {verified} تُستبدل بالتاريخ', m:1},
+  {k:'r.countOpen', g:'رسائل التحديث', l:'إعلان نافذة التقديم المفتوحة — {left} المدة المتبقية', m:1},
+  {k:'r.countClosed', g:'رسائل التحديث', l:'إعلان إغلاق النافذة', m:1},
+  {k:'r.honestNoScores', g:'بصراحة معك', l:'بند: لا درجات قدرات', m:1},
+  {k:'r.honestNoComp', g:'بصراحة معك', l:'بند: لا بيانات منافسة', m:1},
+  {k:'r.honestMin', g:'بصراحة معك', l:'بند: الحد الأدنى العام', m:1},
+  {k:'r.honestInterview', g:'بصراحة معك', l:'بند: المقابلة الشخصية', m:1},
+  {k:'r.honestWeights', g:'بصراحة معك', l:'بند: أوزان العام القادم', m:1},
+  {k:'rs.hits', g:'أسباب التوصية', l:'سبب الاهتمامات — {hits} المجالات المختارة', m:1},
+  {k:'rs.minCert', g:'أسباب التوصية', l:'سبب تجاوز الشرط — {pct} نسبته، {min} الشرط', m:1},
+  {k:'rs.direct', g:'أسباب التوصية', l:'سبب القبول المباشر — {pct} نسبته', m:1},
+  {k:'rs.adj', g:'أسباب التوصية', l:'سبب المعدل المكافئ — {adj} المعدل، {formula} المعادلة', m:1},
+  {k:'rs.needs', g:'أسباب التوصية', l:'سبب نقص البيان — {note} البيان الناقص', m:1},
+  {k:'rs.life', g:'أسباب التوصية', l:'سبب نمط العمل — {hits} التطابقات', m:1},
+  {k:'ch.apt', g:'ما الذي يغيّر التوصية', l:'بند درجات القدرات', m:1},
+  {k:'ch.interests', g:'ما الذي يغيّر التوصية', l:'بند تغيّر الاهتمامات', m:1},
+  {k:'ch.level', g:'ما الذي يغيّر التوصية', l:'بند المستوى الدراسي', m:1},
+  {k:'ch.goal', g:'ما الذي يغيّر التوصية', l:'بند الهدف المهني', m:1},
+  {k:'ch.rules', g:'ما الذي يغيّر التوصية', l:'بند تحديث الشروط', m:1},
+  {k:'r.nextNow', g:'الخطوات التالية', l:'بادئة «الآن»'},
+  {k:'r.nextBefore', g:'الخطوات التالية', l:'بادئة «قبل القفل»'},
+  {k:'r.nextAsk', g:'الخطوات التالية', l:'بادئة «عند السؤال»'},
+  {k:'r.nextOrder', g:'الخطوات التالية', l:'نصيحة ترتيب الرغبات', m:1},
+  {k:'r.nextEmail', g:'الخطوات التالية', l:'بريد عمادة القبول', m:1},
+  {k:'r.foot', g:'الخطوات التالية', l:'تذييل صفحة النتيجة — {verified} التاريخ', m:1},
+  {k:'pt.title', g:'ولي الأمر', l:'عنوان التقرير'},
+  {k:'pt.sub', g:'ولي الأمر', l:'وصف التقرير', m:1},
+  {k:'pt.back', g:'ولي الأمر', l:'زر الرجوع'},
+  {k:'pt.r1', g:'ولي الأمر', l:'صف: التخصص'}, {k:'pt.r2', g:'ولي الأمر', l:'صف: لماذا رُشح'},
+  {k:'pt.r3', g:'ولي الأمر', l:'صف: الأهلية'}, {k:'pt.r4', g:'ولي الأمر', l:'صف: المنافسة'},
+  {k:'pt.r5', g:'ولي الأمر', l:'صف: المخاطر'}, {k:'pt.r6', g:'ولي الأمر', l:'صف: البدائل'}, {k:'pt.r7', g:'ولي الأمر', l:'صف: الخطوة'},
+  {k:'pt.compNone', g:'ولي الأمر', l:'نص «لا بيانات منافسة»', m:1},
+  {k:'pt.risks', g:'ولي الأمر', l:'نص المخاطر', m:1},
+  {k:'pt.qTitle', g:'ولي الأمر', l:'عنوان أسئلة العائلة'},
+  {k:'pt.q1', g:'ولي الأمر', l:'سؤال عائلي 1', m:1}, {k:'pt.q2', g:'ولي الأمر', l:'سؤال عائلي 2', m:1},
+  {k:'pt.q3', g:'ولي الأمر', l:'سؤال عائلي 3', m:1}, {k:'pt.q4', g:'ولي الأمر', l:'سؤال عائلي 4', m:1},
+  {k:'pt.foot', g:'ولي الأمر', l:'تذييل التقرير — {verified} التاريخ', m:1},
+  {k:'sh.text', g:'المشاركة', l:'نص بطاقة المشاركة — {rec} التخصص المرشح', m:1},
+  {k:'err.pct', g:'رسائل الخطأ', l:'خطأ النسبة'}, {k:'err.branch', g:'رسائل الخطأ', l:'خطأ الفرع'}, {k:'err.interests', g:'رسائل الخطأ', l:'خطأ المجالات'},
+  {k:'meta.verifiedAt', g:'عام', l:'تاريخ آخر تحقق من المصادر'},
+  {k:'src.portalLbl', g:'المصادر الرسمية', l:'مصدر 1 — الاسم'}, {k:'src.portalUrl', g:'المصادر الرسمية', l:'مصدر 1 — الرابط'},
+  {k:'src.newsLbl', g:'المصادر الرسمية', l:'مصدر 2 — الاسم'}, {k:'src.newsUrl', g:'المصادر الرسمية', l:'مصدر 2 — الرابط'},
+  {k:'src.weightsLbl', g:'المصادر الرسمية', l:'مصدر 3 — الاسم'}, {k:'src.weightsUrl', g:'المصادر الرسمية', l:'مصدر 3 — الرابط'},
+  {k:'src.rulesLbl', g:'المصادر الرسمية', l:'مصدر 4 — الاسم'}, {k:'src.rulesUrl', g:'المصادر الرسمية', l:'مصدر 4 — الرابط'},
+];
+PROGRAMS.forEach(function(p){
+  CMS_SCHEMA.push({k:'prog.'+p.id+'.desc', g:'نصوص التخصصات', l:p.name+' — الوصف', m:1});
+  CMS_SCHEMA.push({k:'prog.'+p.id+'.next', g:'نصوص التخصصات', l:p.name+' — الخطوة التالية', m:1});
+});
+
+/* بناء نموذج إدارة المحتوى داخل لوحة الإدارة */
+function buildCMS(){
+  const mode = document.getElementById('cms-mode');
+  if(mode) mode.textContent = sb
+    ? '🟢 وضع النشر المركزي: ضغطة «حفظ ونشر» تُحدّث الموقع لجميع الزوار فورًا — بدون إعادة نشر.'
+    : '🟡 وضع المعاينة المحلية: التعديلات تُحفظ على هذا الجهاز فقط. للنشر لجميع الزوار، فعّل Supabase (analytics-setup-guide.md) وشغّل content-setup.sql.';
+  const form = document.getElementById('cms-form');
+  if(!form || form.dataset.built) return;
+  form.dataset.built = '1';
+  const groups = {};
+  CMS_SCHEMA.forEach(function(f){ (groups[f.g] = groups[f.g] || []).push(f); });
+  const inp = 'width:100%; padding:10px 12px; border-radius:10px; border:1.5px solid var(--line); background:var(--bg2); color:var(--ink); font-family:inherit; font-size:.9rem; margin-bottom:10px';
+  let html = '', first = true;
+  Object.keys(groups).forEach(function(g){
+    html += '<details' + (first ? ' open' : '') + ' style="border-top:1px solid var(--line); padding:8px 0">' +
+      '<summary style="cursor:pointer; font-weight:800; font-size:.95rem; padding:6px 0">' + g + ' <span class="muted" style="font-weight:400">(' + groups[g].length + ')</span></summary>';
+    groups[g].forEach(function(f){
+      html += '<label class="fld" style="margin-top:10px">' + f.l + '</label>' +
+        (f.m
+          ? '<textarea id="cms-' + f.k + '" rows="2" style="' + inp + '; resize:vertical">' + String(T(f.k)).replace(/</g,'&lt;') + '</textarea>'
+          : '<input type="text" id="cms-' + f.k + '" value="' + String(T(f.k)).replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" style="' + inp + '">');
+    });
+    html += '</details>';
+    first = false;
+  });
+  form.innerHTML = html;
+}
+function cmsStatus(msg, ok){
+  const st = document.getElementById('cms-status');
+  st.textContent = msg;
+  st.style.color = ok ? 'var(--green)' : 'var(--red)';
+  st.style.display = 'block';
+}
+async function saveCMS(){
+  CMS_SCHEMA.forEach(function(f){
+    const el = document.getElementById('cms-' + f.k);
+    if(el) TEXTS[f.k] = el.value;
+  });
+  applyAllTexts();
+  try{ localStorage.setItem('qarari_cms_override', JSON.stringify(TEXTS)); }catch(_){}
+  if(sb){
+    try{
+      const { data:{ session } } = await sb.auth.getSession();
+      if(session){
+        const { error } = await sb.from('content').upsert({ id:1, texts:TEXTS, updated_at:new Date().toISOString() });
+        if(error){ cmsStatus('⚠️ حُفظ محليًا لكن فشل النشر المركزي: ' + error.message, false); return; }
+        localStorage.removeItem('qarari_cms_override');
+        cmsStatus('✓ تم الحفظ والنشر — التعديلات ظاهرة الآن لجميع الزوار عند تحميل الصفحة', true);
+        return;
+      }
+    }catch(_){}
+    cmsStatus('✓ حُفظ محليًا على هذا الجهاز — سجّل دخول الإدارة للنشر المركزي', true);
+    return;
+  }
+  cmsStatus('✓ حُفظ على هذا الجهاز (وضع المعاينة) — فعّل Supabase للنشر لجميع الزوار', true);
+}
+async function resetCMS(){
+  if(!confirm('استعادة كل النصوص الافتراضية وحذف كل التعديلات؟')) return;
+  TEXTS = Object.assign({}, DEFAULT_TEXTS);
+  localStorage.removeItem('qarari_cms_override');
+  if(sb){
+    try{
+      const { data:{ session } } = await sb.auth.getSession();
+      if(session) await sb.from('content').upsert({ id:1, texts:{}, updated_at:new Date().toISOString() });
+    }catch(_){}
+  }
+  applyAllTexts();
+  const form = document.getElementById('cms-form');
+  if(form){ form.dataset.built = ''; form.innerHTML = ''; }
+  buildCMS();
+  cmsStatus('✓ تمت الاستعادة إلى النصوص الافتراضية', true);
+}
+
 function setStatus(el, v){
   S.status = v;
   el.parentElement.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
@@ -415,6 +771,7 @@ function sbInit(){
   s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
   s.onload = function(){
     sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY);
+    loadContent();
     tryAdminSession();
   };
   document.head.appendChild(s);
@@ -484,6 +841,7 @@ const QA = {
   dump(){ return this.log; }
 };
 QA.init();
+loadContent();
 function setConsent(v){
   localStorage.setItem('qarari_consent', v);
   document.getElementById('consent-bar').classList.remove('show');
@@ -499,7 +857,7 @@ function shareApp(){
   QA.track('share_click', { channel: (navigator.share ? 'web_share_api' : 'clipboard') });
   const rec = (RESULTS && RESULTS.length) ? RESULTS[0].p.name : '';
   const payload = { title:'قراري',
-    text:'طلع لي أقرب مسار: '+rec+' 🎯\nجرّب «قراري» وشوف شنو يناسبك — توصية من مصادر جامعة الكويت الرسمية:',
+    text: tpl(T('sh.text'),{rec:rec}),
     url: location.origin + location.pathname };
   if(navigator.share){ navigator.share(payload).catch(function(){}); return; }
   const txt = payload.text + ' ' + payload.url;
@@ -518,25 +876,25 @@ function sendAcquisition(el, answer){
 /* ─── وضع ولي الأمر ─── */
 function buildParent(){
   const top = RESULTS[0], alts = RESULTS.slice(1,3), p = top.p;
-  const eligTxt = top.ev.st==='eligible' ? 'مؤهل رسميًا ✓' : top.ev.st==='not_eligible' ? 'غير مؤهل ✗ — '+top.ev.note : 'يحتاج تحقق ؟ — '+top.ev.note;
+  const eligTxt = top.ev.st==='eligible' ? T('pt.axOk') : top.ev.st==='not_eligible' ? tpl(T('pt.axNo'),{note:top.ev.note}) : tpl(T('pt.axQ'),{note:top.ev.note});
   const reasons = buildReasons(top).slice(0,3);
   const row = function(t,v){ return '<tr><td style="width:34%">'+t+'</td><td>'+v+'</td></tr>'; };
   document.getElementById('parent-report').innerHTML =
     '<div class="card"><table class="cmp" style="width:100%; border-collapse:collapse">'+
-    row('التخصص المرشح','<strong>'+p.name+'</strong> — '+p.college)+
-    row('ليش رُشح لولدكم؟', reasons.join('<br>'))+
-    row('هل هو مؤهل رسميًا؟', eligTxt)+
-    row('المنافسة المتوقعة','لا تتوفر بيانات كافية من مصدر رسمي — لا نعرض رقمًا غير موثق')+
-    row('المخاطر والنواقص','درجات القدرات تغيّر المعدل المكافئ بشكل كبير · أوزان 2026/2027 بانتظار التحديث الرسمي من الجهة · نافذة التقديم قصيرة')+
-    row('البدائل القريبة', alts.map(function(r){ return r.p.name+' ('+(r.ev.st==='eligible'?'مؤهل':'يحتاج تحقق')+')'; }).join('، '))+
-    row('الخطوة التالية', p.next)+
+    row(T('pt.r1'),'<strong>'+p.name+'</strong> — '+p.college)+
+    row(T('pt.r2'), reasons.join('<br>'))+
+    row(T('pt.r3'), eligTxt)+
+    row(T('pt.r4'), T('pt.compNone'))+
+    row(T('pt.r5'), T('pt.risks'))+
+    row(T('pt.r6'), alts.map(function(r){ return r.p.name+' ('+(r.ev.st==='eligible'?T('pt.altOk'):T('pt.altQ'))+')'; }).join('، '))+
+    row(T('pt.r7'), p.next)+
     '</table></div>'+
-    '<div class="card" style="border-right:4px solid var(--brand)"><h3 style="margin-bottom:10px">أسئلة تناقشونها كعائلة 🏠</h3>'+
-    '<div class="reason"><span class="dot"></span><p>هل الأولوية للتخصص اللي يحبه، ولا للقبول الأسرع، ولا لسوق العمل؟</p></div>'+
-    '<div class="reason"><span class="dot"></span><p>هل نتقبل نمط حياة المهنة اليومي (ورديات، ميدان، جمهور) وليس فقط عنوانها؟</p></div>'+
-    '<div class="reason"><span class="dot"></span><p>هل درجات القدرات تحتاج إعادة قبل قفل التقديم؟ الجامعة تحتسب أعلى محاولة.</p></div>'+
-    '<div class="reason"><span class="dot"></span><p>شنو الخطة البديلة إذا ما انقبل في رغبته الأولى؟</p></div></div>'+
-    '<p class="foot">بيانات الأهلية من مصادر جامعة الكويت الرسمية · آخر تحقق '+VERIFIED_AT+'</p>';
+    '<div class="card" style="border-right:4px solid var(--brand)"><h3 style="margin-bottom:10px">'+T('pt.qTitle')+'</h3>'+
+    '<div class="reason"><span class="dot"></span><p>'+T('pt.q1')+'</p></div>'+
+    '<div class="reason"><span class="dot"></span><p>'+T('pt.q2')+'</p></div>'+
+    '<div class="reason"><span class="dot"></span><p>'+T('pt.q3')+'</p></div>'+
+    '<div class="reason"><span class="dot"></span><p>'+T('pt.q4')+'</p></div></div>'+
+    '<p class="foot">'+tpl(T('pt.foot'),{verified:T('meta.verifiedAt')})+'</p>';
 }
 
 /* ─── إعادة الرحلة ─── */
@@ -559,6 +917,7 @@ function showAdminBody(){
   document.getElementById('admin-gate').style.display='none';
   document.getElementById('admin-body').style.display='block';
   loadAdmin();
+  buildCMS();
 }
 async function tryAdminSession(){
   if(!sb || location.hash !== '#admin') return;
@@ -649,7 +1008,13 @@ function rows_table(obj, head){
   return '<tr><th>'+head+'</th><th>العدد</th></tr>' + keys.map(function(k){ return '<tr><td>'+k+'</td><td><strong>'+obj[k]+'</strong></td></tr>'; }).join('');
 }
 // فتح اللوحة المخفية عبر #admin
-if(location.hash === '#admin'){ go('s-admin'); }
+if(location.hash === '#admin'){
+  go('s-admin');
+  // بدون إعداد Supabase: إتاحة معاينة محلية للوحة وإدارة المحتوى (جهازك فقط)
+  if(!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY){
+    document.getElementById('admin-local-btn').style.display = 'block';
+  }
+}
 
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -661,7 +1026,7 @@ function showStep(n){
   document.getElementById('fstep1').style.display = n===1?'block':'none';
   document.getElementById('fstep2').style.display = n===2?'block':'none';
   document.getElementById('formbar').style.width = (n*50)+'%';
-  document.getElementById('btn-next').textContent = n===2 ? 'شوف ترشيحي 🎯' : 'كمّل ←';
+  document.getElementById('btn-next').textContent = n===2 ? T('nav.final') : T('nav.next');
 }
 function setBranch(b){
   S.branch = b;
@@ -682,15 +1047,15 @@ function formNav(dir){
   }
   if(step===1){
     const pct = parseFloat(document.getElementById('in-pct').value);
-    if(!pct || pct<50 || pct>100){ alert('أدخل نسبتك بين 50 و 100'); return; }
-    if(!S.branch){ alert('اختر فرعك أولًا'); return; }
+    if(!pct || pct<50 || pct>100){ alert(T('err.pct')); return; }
+    if(!S.branch){ alert(T('err.branch')); return; }
     S.pct = pct;
     const g = id => { const v = parseFloat(document.getElementById(id).value); return (v>=0&&v<=100)?v:null; };
     S.eng = g('in-eng'); S.math = g('in-math'); S.arb = g('in-arb');
     QA.track('step_complete',{step:1});
     showStep(2); return;
   }
-  if(S.interests.length===0){ alert('اختر مجالًا واحدًا على الأقل يشدك'); return; }
+  if(S.interests.length===0){ alert(T('err.interests')); return; }
   QA.track('journey_complete',{ branch:S.branch, scores_provided:(S.eng!==null||S.math!==null||S.arb!==null), interests_count:S.interests.length });
   computeResults(); renderResult(); go('s-result');
 }
@@ -734,29 +1099,29 @@ function computeResults(){
 
 /* ─── العرض ─── */
 function eligBadge(st){
-  if(st==='eligible') return '<span class="tag tag-ok">✓ مؤهل رسميًا</span>';
-  if(st==='not_eligible') return '<span class="tag tag-no">✗ غير مؤهل</span>';
-  return '<span class="tag tag-warn">؟ يحتاج تحقق</span>';
+  if(st==='eligible') return '<span class="tag tag-ok">'+T('r.eligOk')+'</span>';
+  if(st==='not_eligible') return '<span class="tag tag-no">'+T('r.eligNo')+'</span>';
+  return '<span class="tag tag-warn">'+T('r.eligQ')+'</span>';
 }
 function buildReasons(r){
   const p = r.p, out = [];
   const hits = p.interests.filter(t=>S.interests.includes(t));
-  if(hits.length) out.push('اخترت أنك تستمتع بـ«'+hits.join('» و«')+'» — وهذا صلب مواد التخصص ويومياته، مو هامشه. التخصص اللي يشبه اهتمامك تُكمله، واللي يخالفه تعاني فيه.');
-  if(r.ev.st==='eligible' && p.minCert) out.push('نسبتك '+S.pct+'٪ تتجاوز شرط الكلية الموثق ('+p.minCert+'٪ فأعلى) — تدخل المنافسة وأنت مستوفٍ للأهلية الرسمية.');
-  if(r.ev.st==='eligible' && !p.minCert && !p.weights) out.push('قبول هذه الكلية يعتمد على نسبة الثانوية مباشرة، ونسبتك '+S.pct+'٪ مدخلك الكامل — لا تحتاج أي درجة قدرات للتنافس هنا.');
-  if(r.adj!==null && p.weights) out.push('بدرجات قدراتك، معدلك المكافئ التقريبي '+r.adj+' (شهادة '+p.weights.cert+'٪'+(p.weights.eng?' + إنجليزية '+p.weights.eng+'٪':'')+(p.weights.math?' + رياضيات '+p.weights.math+'٪':'')+(p.weights.arb?' + عربية '+p.weights.arb+'٪':'')+').');
-  if(r.ev.st==='needs_verification') out.push('بصراحة معك: ما نقدر نجزم أهليتك الرسمية قبل ما تكمل البيان الناقص — '+r.ev.note+'. والقدرات في يدك: الجامعة تسمح بثلاث محاولات بالسنة وتحتسب أعلى نتيجة.');
+  if(hits.length) out.push(tpl(T('rs.hits'),{hits:hits.join('» و«')}));
+  if(r.ev.st==='eligible' && p.minCert) out.push(tpl(T('rs.minCert'),{pct:S.pct,min:p.minCert}));
+  if(r.ev.st==='eligible' && !p.minCert && !p.weights) out.push(tpl(T('rs.direct'),{pct:S.pct}));
+  if(r.adj!==null && p.weights) out.push(tpl(T('rs.adj'),{adj:r.adj,formula:'شهادة '+p.weights.cert+'٪'+(p.weights.eng?' + إنجليزية '+p.weights.eng+'٪':'')+(p.weights.math?' + رياضيات '+p.weights.math+'٪':'')+(p.weights.arb?' + عربية '+p.weights.arb+'٪':'')}));
+  if(r.ev.st==='needs_verification') out.push(tpl(T('rs.needs'),{note:r.ev.note}));
   const lHits = p.life.filter(t=>S.life.includes(t));
-  if(lHits.length) out.push('تتقبل «'+lHits.join('» و«')+'» في يوم شغلك — وهذا واقع المهنة اليومي بعد التخرج. كثير يكتشف هذا المتأخر، أنت تعرفه من الآن.');
+  if(lHits.length) out.push(tpl(T('rs.life'),{hits:lHits.join('» و«')}));
   return out.slice(0,5);
 }
 function buildChangers(r){
   const items = [];
-  if(r.p.weights) items.push('<strong>درجات القدرات:</strong> الجامعة تسمح بثلاث محاولات في السنة وتحتسب أعلى نتيجة — تحسين درجتك يرفع معدلك المكافئ وقد يفتح لك كليات أعلى.');
-  items.push('<strong>تغيّر اهتماماتك:</strong> التوصية مبنية على إجاباتك اليوم. لو اكتشفت ميلًا جديدًا خلال الصيف، أعد التقييم — الميول تتضح بالتجربة.');
-  items.push('<strong>تحسّن أو انخفاض مستواك الدراسي:</strong> نسبة الثانوية النهائية هي المدخل الرسمي الأول لأي كلية.');
-  items.push('<strong>تغيّر هدفك المهني:</strong> لو تبدلت أولويتك (تخصص تحبه ↔ أولوية القبول ↔ وظيفة أسرع) فالترتيب الصحيح لرغباتك يتغير معها.');
-  items.push('<strong>تحديث الشروط الرسمية:</strong> أوزان 2026/2027 لم تُنشر بعد؛ نعتمد جدول 2025/2026 الموثق وقد يُحدَّث — راجع المصدر الرسمي قبل التقديم.');
+  if(r.p.weights) items.push(T('ch.apt'));
+  items.push(T('ch.interests'));
+  items.push(T('ch.level'));
+  items.push(T('ch.goal'));
+  items.push(T('ch.rules'));
   return items;
 }
 function renderResult(){
@@ -768,11 +1133,10 @@ function renderResult(){
   let dbox;
   if(diff > 0){
     const days = Math.floor(diff/864e5), hrs = Math.floor(diff%864e5/36e5);
-    dbox = '<div class="countdown">⏳ <strong>نافذة التقديم لجامعة الكويت مفتوحة الآن</strong> — يتبقى '+
-      (days>0? days+(days===1?' يوم':' أيام')+' و'+hrs+' ساعة' : hrs+' ساعة')+
-      ' على الإغلاق (الثلاثاء 28 يوليو، 10 صباحًا) — <strong>مصدر رسمي موثق</strong></div>';
+    const leftTxt = days>0 ? days+(days===1?' يوم':' أيام')+' و'+hrs+' ساعة' : hrs+' ساعة';
+    dbox = '<div class="countdown">'+tpl(T('r.countOpen'),{left:leftTxt})+'</div>';
   } else {
-    dbox = '<div class="notice">انتهت نافذة الفصل الأول (18–28 يوليو 2026). الكليات المقيدة بالفصل الأول لا تقبل الآن — تابع إعلان الفصل الثاني من المصدر الرسمي.</div>';
+    dbox = '<div class="notice">'+T('r.countClosed')+'</div>';
   }
   document.getElementById('deadline-box').innerHTML = dbox;
 
@@ -782,27 +1146,27 @@ function renderResult(){
     (top.ev.note ? '<p class="muted" style="font-size:.85rem; margin-top:6px">'+top.ev.note+'</p>' : '');
   document.getElementById('r-fit').textContent = top.fit+'٪';
   document.getElementById('r-desc').textContent = p.desc;
-  document.getElementById('r-verify').textContent = 'بيانات الأهلية: مصادر رسمية · آخر تحقق '+VERIFIED_AT+' · أوزان المعدل المكافئ 2025/2026';
+  document.getElementById('r-verify').textContent = tpl(T('r.verify'),{verified:T('meta.verifiedAt')});
 
   // ─── المحاور الأربعة منفصلة ───
   const lHits2 = p.life.filter(function(t){ return S.life.includes(t); });
-  const eligTxt = top.ev.st==='eligible' ? 'مؤهل رسميًا ✓' : top.ev.st==='not_eligible' ? 'غير مؤهل ✗' : 'يحتاج تحقق ؟';
-  const lifeTxt = S.life.length===0 ? 'لم تجب على أسئلة نمط العمل' : lHits2.length>0 ? 'ملائم لتفضيلاتك ('+lHits2.join('، ')+')' : 'ما تطابق واضح مع تفضيلاتك';
+  const eligTxt = top.ev.st==='eligible' ? T('r.axOk') : top.ev.st==='not_eligible' ? T('r.axNo') : T('r.axQ');
+  const lifeTxt = S.life.length===0 ? T('r.lifeNone') : lHits2.length>0 ? tpl(T('r.lifeYes'),{hits:lHits2.join('، ')}) : T('r.lifeNo');
   const ax = function(t,v,c){ return '<div style="background:var(--bg2); border:1px solid var(--line); border-radius:12px; padding:10px 12px"><div class="muted" style="font-size:.72rem">'+t+'</div><div style="font-weight:800; font-size:.88rem; color:'+c+'">'+v+'</div></div>'; };
   document.getElementById('r-axes').innerHTML =
-    ax('توافق الميول', top.fit+'٪', 'var(--brand)') +
-    ax('الأهلية الرسمية', eligTxt, top.ev.st==='eligible'?'var(--green)':top.ev.st==='not_eligible'?'var(--red)':'var(--gold)') +
-    ax('المنافسة المتوقعة', 'لا تتوفر بيانات كافية', 'var(--muted)') +
-    ax('نمط الدراسة والعمل', lifeTxt, 'var(--ink)');
+    ax(T('r.axFit'), top.fit+'٪', 'var(--brand)') +
+    ax(T('r.axElig'), eligTxt, top.ev.st==='eligible'?'var(--green)':top.ev.st==='not_eligible'?'var(--red)':'var(--gold)') +
+    ax(T('r.axComp'), T('r.compNone'), 'var(--muted)') +
+    ax(T('r.axLife'), lifeTxt, 'var(--ink)');
 
   // ─── بصراحة معك ───
   const honest = [];
   if(top.ev.st==='needs_verification') honest.push(top.ev.note);
-  if(p.weights && (S.eng===null && S.math===null && S.arb===null)) honest.push('ما أدخلت درجات القدرات — عشان كذا ما نقدر نحسب معدلك المكافئ ولا نجزم أهليتك للكليات اللي تعتمده.');
-  honest.push('معدلات القبول الفعلية للسنوات السابقة غير منشورة في مصدر رسمي وصلنا له — عشان كذا «المنافسة المتوقعة» بدون بيانات، وما نبي نخمّن لك رقم.');
-  honest.push('الحد الأدنى العام لنسبة القبول بالجامعة: بانتظار التحديث الرسمي من الجهة.');
-  if(/مقابلة/.test(p.next) || /مقابلة/.test(p.desc)) honest.push('هذا المسار يشترط مقابلة شخصية بعد القبول — جهّز لها من بدري.');
-  honest.push('نعتمد أوزان 2025/2026 الموثقة؛ جدول 2026/2027 بانتظار التحديث الرسمي من الجهة وقد تتغير الأوزان.');
+  if(p.weights && (S.eng===null && S.math===null && S.arb===null)) honest.push(T('r.honestNoScores'));
+  honest.push(T('r.honestNoComp'));
+  honest.push(T('r.honestMin'));
+  if(/مقابلة/.test(p.next) || /مقابلة/.test(p.desc)) honest.push(T('r.honestInterview'));
+  honest.push(T('r.honestWeights'));
   document.getElementById('r-honest').innerHTML = honest.map(function(t){ return '<div class="reason"><span class="dot" style="background:var(--amber)"></span><p>'+t+'</p></div>'; }).join('');
 
   document.getElementById('r-reasons').innerHTML = buildReasons(top)
@@ -810,9 +1174,9 @@ function renderResult(){
   document.getElementById('r-changers').innerHTML = buildChangers(top)
     .map(t=>'<div class="reason"><span class="dot" style="background:var(--gold)"></span><p>'+t+'</p></div>').join('');
   document.getElementById('r-next').innerHTML =
-    '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>الآن:</strong> '+p.next+'</p></div>'+
-    '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>قبل القفل:</strong> رتّب رغباتك داخل طلب الالتحاق بأكبر عدد ممكن — الدليل الرسمي ينصح بذلك، ولا يمكن التعديل بعد إغلاق الفترة.</p></div>'+
-    '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>عند السؤال:</strong> راسل عمادة القبول والتسجيل admission@ku.edu.kw (موثق في الدليل الرسمي).</p></div>';
+    '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>'+T('r.nextNow')+'</strong> '+p.next+'</p></div>'+
+    '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>'+T('r.nextBefore')+'</strong> '+T('r.nextOrder')+'</p></div>'+
+    '<div class="reason"><span class="dot" style="background:var(--green)"></span><p><strong>'+T('r.nextAsk')+'</strong> '+T('r.nextEmail')+'</p></div>';
 
   document.getElementById('r-sources').innerHTML = [SRC.portal, SRC.news, SRC.weights, SRC.rules]
     .map(s=>'<a class="src-link" href="'+s.url+'" target="_blank" rel="noopener" onclick="QA.track(\'source_click\',{source:\''+s.label+'\'})"><span>🔗</span><span>'+s.label+'</span><span class="arrow">↗</span></a>').join('');
@@ -821,8 +1185,7 @@ function renderResult(){
     '<div class="alt-row"><div><strong>'+r.p.name+'</strong><br><span class="muted" style="font-size:.82rem">'+r.p.college+'</span></div>'+
     '<div style="text-align:left">'+eligBadge(r.ev.st)+'<br><strong style="color:var(--brand)">'+r.fit+'٪</strong></div></div>').join('');
 
-  document.getElementById('r-foot').innerHTML =
-    'قراري لا يعد بقبول — يوضّح أهليتك الرسمية وخطوتك التالية.<br>القرار النهائي للقبول لعمادة القبول والتسجيل وحدها · آخر تحقق من المصادر: '+VERIFIED_AT;
+  document.getElementById('r-foot').innerHTML = tpl(T('r.foot'),{verified:T('meta.verifiedAt')}).replace(/\n/g,'<br>');
 }
 function restart(){ QA.track('restart_journey'); location.reload(); }
 </script>
