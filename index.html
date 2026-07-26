@@ -126,13 +126,22 @@ table.admin th{color:var(--muted); font-weight:700}
         <button class="chip" id="br-sci" onclick="setBranch('علمي')" data-t="f1.sci">علمي 🔬</button>
         <button class="chip" id="br-art" onclick="setBranch('أدبي')" data-t="f1.art">أدبي 📖</button>
       </div>
-      <label class="fld" data-t="f1.apt">درجات القدرات <span class="muted" style="font-weight:400; font-size:.85rem">(اختياري — لو تعرفها)</span></label>
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
-        <input type="number" id="in-eng" min="0" max="100" placeholder="إنجليزي" inputmode="decimal" data-t-ph="f1.engPh">
-        <input type="number" id="in-math" min="0" max="100" placeholder="رياضيات" inputmode="decimal" data-t-ph="f1.mathPh">
-        <input type="number" id="in-arb" min="0" max="100" placeholder="عربي" inputmode="decimal" data-t-ph="f1.arbPh">
+      <label class="fld" data-t="f1.aptQ">هل اختبرت القدرات؟</label>
+      <div class="chips" id="chips-apt">
+        <button class="chip" onclick="setApt(this,'عندي الدرجات')" data-t="f1.q1">عندي الدرجات</button>
+        <button class="chip" onclick="setApt(this,'بانتظار النتيجة')" data-t="f1.q2">اختبرت وبانتظار النتيجة</button>
+        <button class="chip" onclick="setApt(this,'ما اختبرت')" data-t="f1.q3">للحين ما اختبرت</button>
+        <button class="chip" onclick="setApt(this,'ما أعرف')" data-t="f1.q4">ما أعرف إذا أحتاجها</button>
       </div>
-      <p class="muted" style="font-size:.82rem; margin-top:8px" data-t="f1.aptNote">تركها فاضية ما يمنع الترشيح — بس الأهلية بتكون «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.</p>
+      <div id="apt-scores" style="display:none">
+        <label class="fld" data-t="f1.apt">درجات القدرات <span class="muted" style="font-weight:400; font-size:.85rem">(اختياري — لو تعرفها)</span></label>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px">
+          <input type="number" id="in-eng" min="0" max="100" placeholder="إنجليزي" inputmode="decimal" data-t-ph="f1.engPh">
+          <input type="number" id="in-math" min="0" max="100" placeholder="رياضيات" inputmode="decimal" data-t-ph="f1.mathPh">
+          <input type="number" id="in-arb" min="0" max="100" placeholder="عربي" inputmode="decimal" data-t-ph="f1.arbPh">
+        </div>
+        <p class="muted" style="font-size:.82rem; margin-top:8px" data-t="f1.aptNote">تركها فاضية ما يمنع الترشيح — بس الأهلية بتكون «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.</p>
+      </div>
     </div>
 
     <!-- خطوة 2: الميول -->
@@ -394,7 +403,7 @@ const PROGRAMS = [
     next:'قدّم عبر نظام القبول، واستعد للمقابلة الشخصية — اجتيازها شرط موثق بعد القبول.' },
 ];
 
-const S = { status:null, pct:null, branch:null, eng:null, math:null, arb:null, interests:[], life:[] };
+const S = { status:null, pct:null, branch:null, aptStatus:null, eng:null, math:null, arb:null, interests:[], life:[] };
 let step = 1, RESULTS = [];
 
 /* ═══════════════ طبقة إدارة المحتوى (CMS) ═══════════════
@@ -420,6 +429,9 @@ const DEFAULT_TEXTS = {
   'f1.st1': 'في ثاني عشر 📚', 'f1.st2': 'خريج هالسنة 🎓', 'f1.st3': 'خريج سنة سابقة 🗂️',
   'f1.pct': 'نسبتك في الثانوية ٪', 'f1.pctPh': 'مثال: 87.5',
   'f1.branch': 'فرعك', 'f1.sci': 'علمي 🔬', 'f1.art': 'أدبي 📖',
+  'f1.aptQ': 'هل اختبرت القدرات؟',
+  'f1.q1': 'عندي الدرجات', 'f1.q2': 'اختبرت وبانتظار النتيجة',
+  'f1.q3': 'للحين ما اختبرت', 'f1.q4': 'ما أعرف إذا أحتاجها',
   'f1.apt': 'درجات القدرات ',
   'f1.engPh': 'إنجليزي', 'f1.mathPh': 'رياضيات', 'f1.arbPh': 'عربي',
   'f1.aptNote': 'تركها فاضية ما يمنع الترشيح — بس الأهلية بتكون «يحتاج تحقق» للكليات اللي تعتمد المعدل المكافئ.',
@@ -576,7 +588,10 @@ const CMS_SCHEMA = [
   {k:'f1.pct', g:'الأسئلة — الخطوة 1', l:'سؤال النسبة'}, {k:'f1.pctPh', g:'الأسئلة — الخطوة 1', l:'مثال داخل خانة النسبة'},
   {k:'f1.branch', g:'الأسئلة — الخطوة 1', l:'سؤال الفرع'},
   {k:'f1.sci', g:'الأسئلة — الخطوة 1', l:'خيار علمي'}, {k:'f1.art', g:'الأسئلة — الخطوة 1', l:'خيار أدبي'},
-  {k:'f1.apt', g:'الأسئلة — الخطوة 1', l:'سؤال درجات القدرات'},
+  {k:'f1.aptQ', g:'الأسئلة — الخطوة 1', l:'سؤال: هل اختبرت القدرات؟'},
+  {k:'f1.q1', g:'الأسئلة — الخطوة 1', l:'خيار القدرات 1'}, {k:'f1.q2', g:'الأسئلة — الخطوة 1', l:'خيار القدرات 2'},
+  {k:'f1.q3', g:'الأسئلة — الخطوة 1', l:'خيار القدرات 3'}, {k:'f1.q4', g:'الأسئلة — الخطوة 1', l:'خيار القدرات 4'},
+  {k:'f1.apt', g:'الأسئلة — الخطوة 1', l:'عنوان خانات الدرجات (تظهر مع «عندي الدرجات»)'},
   {k:'f1.engPh', g:'الأسئلة — الخطوة 1', l:'خانة الإنجليزية'}, {k:'f1.mathPh', g:'الأسئلة — الخطوة 1', l:'خانة الرياضيات'}, {k:'f1.arbPh', g:'الأسئلة — الخطوة 1', l:'خانة العربية'},
   {k:'f1.aptNote', g:'الأسئلة — الخطوة 1', l:'ملاحظة ترك القدرات فارغة', m:1},
   {k:'f2.title', g:'الأسئلة — الخطوة 2', l:'عنوان الخطوة'},
@@ -747,6 +762,20 @@ function setStatus(el, v){
   S.status = v;
   el.parentElement.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
   el.classList.add('selected');
+}
+/* سؤال «هل اختبرت القدرات؟» — خانات الدرجات تظهر فقط مع «عندي الدرجات» */
+function setApt(el, v){
+  S.aptStatus = v;
+  el.parentElement.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  const box = document.getElementById('apt-scores');
+  if(v === 'عندي الدرجات'){
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+    // مسح أي درجات مكتوبة حتى لا تدخل الحساب وهي مخفية
+    ['in-eng','in-math','in-arb'].forEach(function(id){ document.getElementById(id).value = ''; });
+  }
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -1052,7 +1081,7 @@ function formNav(dir){
     S.pct = pct;
     const g = id => { const v = parseFloat(document.getElementById(id).value); return (v>=0&&v<=100)?v:null; };
     S.eng = g('in-eng'); S.math = g('in-math'); S.arb = g('in-arb');
-    QA.track('step_complete',{step:1});
+    QA.track('step_complete',{step:1, apt_status:S.aptStatus});
     showStep(2); return;
   }
   if(S.interests.length===0){ alert(T('err.interests')); return; }
