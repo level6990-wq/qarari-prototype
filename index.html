@@ -58,9 +58,33 @@ label.fld{display:block; margin:20px 0 8px; font-weight:800; font-size:1.02rem}
 .countdown{background:linear-gradient(135deg,rgba(255,107,107,.12),rgba(255,179,71,.1)); border:1px solid rgba(255,107,107,.35); border-radius:14px; padding:16px 18px; text-align:center; margin-bottom:18px}
 .foot{text-align:center; color:var(--muted); font-size:.78rem; margin-top:44px; line-height:2}
 @media (max-width:560px){ .btn{font-size:.98rem; padding:14px 20px} .card{padding:18px} .hero-pct{font-size:2.4rem} }
+/* ═══ موافقة الخصوصية ═══ */
+.consent{position:fixed; bottom:0; right:0; left:0; background:var(--card); border-top:1px solid var(--line); padding:16px; z-index:60; display:none; box-shadow:0 -8px 30px rgba(0,0,0,.4)}
+.consent.show{display:block}
+.consent .wrap{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.consent p{flex:1; min-width:220px; font-size:.88rem; color:var(--muted)}
+/* ═══ لوحة الإدارة ═══ */
+.stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:16px 0}
+.stat{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:16px; text-align:center}
+.stat .num{font-size:1.7rem; font-weight:900; color:var(--brand)}
+.stat .lbl{font-size:.78rem; color:var(--muted)}
+table.admin{width:100%; border-collapse:collapse; font-size:.9rem}
+table.admin th,table.admin td{padding:10px 8px; border-bottom:1px solid var(--line); text-align:right}
+table.admin th{color:var(--muted); font-weight:700}
 </style>
 </head>
 <body>
+
+<!-- ═══ شريط موافقة الخصوصية ═══ -->
+<div class="consent" id="consent-bar">
+  <div class="wrap">
+    <p>🔒 <strong style="color:var(--ink)">خصوصيتك أولًا:</strong> نجمع إحصاءات استخدام مجهولة تمامًا — بدون اسم أو رقم مدني أو هاتف — لتحسين قراري. درجاتك واختياراتك التفصيلية لا تُرسل أبدًا، فقط نوع الحدث (مثل: بدأ، أكمل، ضغط مصدر).</p>
+    <div style="display:flex; gap:10px">
+      <button class="btn btn-primary" style="padding:10px 22px; font-size:.9rem" onclick="setConsent('granted')">موافق</button>
+      <button class="btn btn-ghost" style="padding:10px 22px; font-size:.9rem" onclick="setConsent('denied')">لا، شكرًا</button>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════ البداية ═══════ -->
 <section id="s-welcome" class="screen active">
@@ -161,6 +185,9 @@ label.fld{display:block; margin:20px 0 8px; font-weight:800; font-size:1.02rem}
       <p class="muted" id="r-verify" style="font-size:.78rem; margin-top:12px"></p>
     </div>
 
+    <button class="btn btn-ghost btn-block" style="margin-bottom:16px" onclick="shareApp()">📤 أعجبك قراري؟ شاركه مع زميل يحتار مثلك</button>
+    <p id="share-note" style="display:none; color:var(--green); font-weight:700; text-align:center; margin:-8px 0 16px">✓ تم</p>
+
     <!-- 2) لماذا رشحنا لك -->
     <div class="card">
       <h3 style="margin-bottom:6px">ليش رشحنا لك هذا التخصص؟</h3>
@@ -186,11 +213,48 @@ label.fld{display:block; margin:20px 0 8px; font-weight:800; font-size:1.02rem}
       <div id="r-sources"></div>
     </div>
 
+    <!-- سؤال التغذية الراجعة -->
+    <div class="card" id="feedback-card">
+      <h3 style="margin-bottom:6px">هل وضحت لك الصورة؟ 🤔</h3>
+      <p class="muted" style="font-size:.85rem; margin-bottom:12px">إجابتك مجهولة وتساعدنا نحسّن التوصية.</p>
+      <div class="chips">
+        <button class="chip" onclick="sendFeedback('نعم تمامًا')">نعم تمامًا 👍</button>
+        <button class="chip" onclick="sendFeedback('جزئيًا')">جزئيًا 🤏</button>
+        <button class="chip" onclick="sendFeedback('لا بعد')">لا بعد 😕</button>
+      </div>
+      <p id="feedback-thanks" style="display:none; color:var(--green); font-weight:700; margin-top:12px">✓ وصلت إجابتك — شكرًا لك 🤍</p>
+    </div>
+
     <!-- بدائل -->
     <p class="muted" style="font-weight:800; margin:22px 0 10px">خيارات أخرى قريبة منك:</p>
     <div id="r-alts"></div>
 
     <p class="foot" id="r-foot"></p>
+  </div>
+</section>
+
+<!-- ═══════ لوحة الإدارة (مخفية — #admin) ═══════ -->
+<section id="s-admin" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span> · الإدارة</div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="location.hash='';go('s-welcome')">خروج</button></div>
+    <div id="admin-gate">
+      <div class="card" style="max-width:420px; margin:60px auto; text-align:center">
+        <h3 style="margin-bottom:14px">🔐 منطقة الإدارة</h3>
+        <input type="password" id="admin-pass" placeholder="كلمة المرور" style="width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg2); color:var(--ink); font-family:inherit; font-size:1rem; margin-bottom:12px" onkeydown="if(event.key==='Enter')adminLogin()">
+        <button class="btn btn-primary btn-block" onclick="adminLogin()">دخول</button>
+        <p id="admin-err" style="display:none; color:var(--red); margin-top:10px; font-weight:700">كلمة المرور غير صحيحة</p>
+      </div>
+    </div>
+    <div id="admin-body" style="display:none">
+      <h2 style="margin:10px 0 4px">لوحة التحليلات المركزية 📊</h2>
+      <p class="muted" id="admin-status" style="margin-bottom:16px"></p>
+      <div class="stat-grid" id="admin-stats"></div>
+      <div class="card"><h3 style="margin-bottom:10px">أكثر التخصصات ظهورًا في التوصيات</h3><table class="admin" id="admin-majors"></table></div>
+      <div class="card"><h3 style="margin-bottom:10px">الانسحابات حسب النقطة</h3><table class="admin" id="admin-abandon"></table></div>
+      <div class="card"><h3 style="margin-bottom:10px">ضغطات المصادر الرسمية</h3><table class="admin" id="admin-sources"></table></div>
+      <div class="card"><h3 style="margin-bottom:10px">هل وضحت لك الصورة؟</h3><table class="admin" id="admin-feedback"></table></div>
+      <button class="btn btn-ghost btn-block" onclick="loadAdmin()">↻ تحديث البيانات</button>
+    </div>
   </div>
 </section>
 
@@ -278,28 +342,175 @@ const PROGRAMS = [
 const S = { pct:null, branch:null, eng:null, math:null, arb:null, interests:[], life:[] };
 let step = 1, RESULTS = [];
 
-/* ═══ التحليلات الداخلية — بدون خادم: تُحفظ محليًا على جهاز المستخدم فقط (localStorage)
-   الأحداث: journey_start · step_complete · journey_abandon · journey_complete · result_view · source_click · share
-   للاطلاع أثناء الاختبار: QA.dump() من وحدة تحكم المتصفح، أو localStorage['qarari_events_v1'] ═══ */
+/* ════════════════════════════════════════════════════════════
+   طبقة التحليلات المركزية — قراري
+   • موافقة خصوصية قبل أي جمع (مجهول بالكامل: لا اسم/مدني/هاتف)
+   • معرف جلسة عشوائي (crypto.randomUUID) غير قابل للربط بالهوية
+   • إرسال إلى Supabase (جدول events) + قياس زوار عبر GA4 عند التفعيل
+   • لا تُرسل درجات الطالب ولا اختياراته التفصيلية — نوع الحدث فقط
+   ════════════════════════════════════════════════════════════ */
+const CFG = {
+  GA_MEASUREMENT_ID: '',        // ← ضع معرف GA4 هنا (مثل G-XXXXXXX) لتفعيل قياس الزوار
+  SUPABASE_URL: '',             // ← مثل https://abcdefgh.supabase.co
+  SUPABASE_ANON_KEY: '',        // ← مفتاح anon public من مشروع Supabase
+  ADMIN_PASS: 'qarari-2026'     // ← غيّر كلمة مرور لوحة الإدارة
+};
+
 const QA = {
   KEY: 'qarari_events_v1',
+  sid: null,
   log: [],
-  init(){ try{ QA.log = JSON.parse(localStorage.getItem(QA.KEY)||'[]'); }catch(_){ QA.log = []; } },
-  track(event, data){
-    const e = { event, data: data||{}, ts: new Date().toISOString(),
-      screen: (document.querySelector('.screen.active')||{}).id || null };
-    QA.log.push(e);
-    try{ localStorage.setItem(QA.KEY, JSON.stringify(QA.log.slice(-500))); }catch(_){}
-    if(window.console && console.debug) console.debug('[QA]', e);
+  consent(){ return localStorage.getItem('qarari_consent'); },
+  init(){
+    // معرف الجلسة: عشوائي لكل جلسة متصفح، لا يُشتق من أي بيانات شخصية
+    this.sid = sessionStorage.getItem('qarari_sid');
+    if(!this.sid){
+      this.sid = (crypto.randomUUID ? crypto.randomUUID() : 's-'+Math.random().toString(36).slice(2)+Date.now());
+      sessionStorage.setItem('qarari_sid', this.sid);
+      // زيارة عائدة: شاهد الموقع سابقًا وهذه جلسة جديدة
+      if(localStorage.getItem('qarari_seen') && this.consent()==='granted') this.track('return_visit');
+      localStorage.setItem('qarari_seen','1');
+    }
+    try{ this.log = JSON.parse(localStorage.getItem(this.KEY)||'[]'); }catch(_){ this.log = []; }
+    // إظهار شريط الموافقة لأول مرة
+    if(!this.consent()) document.getElementById('consent-bar').classList.add('show');
+    this.loadGA();
   },
-  dump(){ return QA.log; }
+  track(event, data){
+    if(this.consent()!=='granted') return;      // لا موافقة = لا جمع إطلاقًا
+    const clean = this.sanitize(data||{});
+    const e = { event, data: clean, ts: new Date().toISOString(),
+      screen: (document.querySelector('.screen.active')||{}).id || null };
+    this.log.push(e);
+    try{ localStorage.setItem(this.KEY, JSON.stringify(this.log.slice(-500))); }catch(_){}
+    if(window.console && console.debug) console.debug('[QA]', e);
+    this.send(e);
+    if(window.gtag) gtag('event', event, clean);
+  },
+  sanitize(d){
+    // قائمة بيضاء: نحذف أي درجة أو اختيار تفصيلي قبل الإرسال المركزي
+    const banned = ['pct','percentage','eng','math','arb','score','scores','interests','life','branch_detail'];
+    const out = {};
+    for(const k in d) if(!banned.includes(k)) out[k]=d[k];
+    return out;
+  },
+  send(e){
+    if(!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY) return;   // لم يُفعّل بعد — يبقى محليًا فقط
+    try{
+      fetch(CFG.SUPABASE_URL + '/rest/v1/events', {
+        method:'POST',
+        headers:{ 'apikey':CFG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+CFG.SUPABASE_ANON_KEY,
+          'Content-Type':'application/json', 'Prefer':'return=minimal' },
+        body: JSON.stringify({ event:e.event, data:e.data, session_id:this.sid, ts:e.ts }),
+        keepalive: true
+      }).catch(function(){});
+    }catch(_){}
+  },
+  loadGA(){
+    if(!CFG.GA_MEASUREMENT_ID) return;
+    const s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + CFG.GA_MEASUREMENT_ID;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){ dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', CFG.GA_MEASUREMENT_ID, { anonymize_ip: true });
+  },
+  dump(){ return this.log; }
 };
 QA.init();
+function setConsent(v){
+  localStorage.setItem('qarari_consent', v);
+  document.getElementById('consent-bar').classList.remove('show');
+}
 function startJourney(){ QA.track('journey_start'); go('s-form'); showStep(1); }
 window.addEventListener('beforeunload', function(){
   if(document.getElementById('s-form').classList.contains('active'))
     QA.track('journey_abandon', { at:'step'+step, via:'page_unload' });
 });
+
+/* ─── المشاركة (Web Share API + بديل النسخ) ─── */
+function shareApp(){
+  QA.track('share_click', { channel: (navigator.share ? 'web_share_api' : 'clipboard') });
+  const payload = { title:'قراري', text:'جربت «قراري» — مستشار أكاديمي يرشح لك التخصص الأنسب من مصادر جامعة الكويت الرسمية، بخطوتين:', url: location.origin + location.pathname };
+  if(navigator.share){ navigator.share(payload).catch(function(){}); return; }
+  const txt = payload.text + ' ' + payload.url;
+  const done = function(){ const n=document.getElementById('share-note'); n.style.display='block'; setTimeout(function(){n.style.display='none'},2500); };
+  if(navigator.clipboard) navigator.clipboard.writeText(txt).then(done).catch(done);
+  else done();
+}
+
+/* ─── التغذية الراجعة ─── */
+function sendFeedback(answer){
+  QA.track('feedback_submit', { answer: answer });
+  document.getElementById('feedback-thanks').style.display = 'block';
+  document.querySelectorAll('#feedback-card .chip').forEach(function(c){ c.disabled = true; c.style.opacity = .45; });
+}
+
+/* ─── لوحة الإدارة ─── */
+function adminLogin(){
+  const v = document.getElementById('admin-pass').value;
+  if(v !== CFG.ADMIN_PASS){ document.getElementById('admin-err').style.display='block'; return; }
+  document.getElementById('admin-err').style.display='none';
+  document.getElementById('admin-gate').style.display='none';
+  document.getElementById('admin-body').style.display='block';
+  loadAdmin();
+}
+async function loadAdmin(){
+  const st = document.getElementById('admin-status');
+  if(!CFG.SUPABASE_URL || !CFG.SUPABASE_ANON_KEY){
+    st.innerHTML = '⚠️ Supabase غير مفعّل بعد — أضف SUPABASE_URL و SUPABASE_ANON_KEY في إعدادات الملف. البيانات حاليًا محلية على كل جهاز فقط.';
+    renderAdmin(QA.log, 'محلي (هذا الجهاز فقط)');
+    return;
+  }
+  st.textContent = 'جاري الجلب من القاعدة المركزية…';
+  try{
+    const r = await fetch(CFG.SUPABASE_URL + '/rest/v1/events?select=event,data,session_id,ts&order=ts.desc&limit=5000',
+      { headers:{ 'apikey':CFG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+CFG.SUPABASE_ANON_KEY } });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const rows = await r.json();
+    st.textContent = 'مصدر البيانات: القاعدة المركزية · آخر تحديث الآن · عدد السجلات: ' + rows.length;
+    renderAdmin(rows, 'مركزي');
+  }catch(err){
+    st.innerHTML = '⚠️ تعذر الجلب من القاعدة المركزية (' + err.message + ') — تحقق من المفاتيح وسياسات RLS.';
+  }
+}
+function renderAdmin(rows, mode){
+  const by = function(ev){ return rows.filter(function(r){return r.event===ev}); };
+  const sessions = new Set(rows.map(function(r){return r.session_id}).filter(Boolean));
+  const started = by('journey_start').length;
+  const completed = by('journey_complete').length;
+  const shares = by('share_click').length;
+  const rate = started ? Math.round(completed/started*100) : 0;
+  document.getElementById('admin-stats').innerHTML =
+    stat(sessions.size || '—','زائر (جلسات فريدة)') + stat(started,'بدأوا الرحلة') +
+    stat(rate+'٪','نسبة الإكمال') + stat(by('result_view').length,'نتيجة معروضة') +
+    stat(by('source_click').length,'ضغطة مصدر') + stat(shares,'مشاركة');
+  // أكثر التخصصات
+  const majors = {};
+  by('result_view').forEach(function(r){ const m=(r.data&&r.data.recommended)||'؟'; majors[m]=(majors[m]||0)+1; });
+  document.getElementById('admin-majors').innerHTML = rows_table(majors, 'التخصص (معرف)');
+  // الانسحابات
+  const ab = {};
+  by('journey_abandon').forEach(function(r){ const a=(r.data&&r.data.at)||'؟'; ab[a]=(ab[a]||0)+1; });
+  document.getElementById('admin-abandon').innerHTML = rows_table(ab, 'نقطة الانسحاب');
+  // المصادر
+  const sc = {};
+  by('source_click').forEach(function(r){ const s=(r.data&&r.data.source)||'؟'; sc[s]=(sc[s]||0)+1; });
+  document.getElementById('admin-sources').innerHTML = rows_table(sc, 'المصدر');
+  // التغذية
+  const fb = {};
+  by('feedback_submit').forEach(function(r){ const a=(r.data&&r.data.answer)||'؟'; fb[a]=(fb[a]||0)+1; });
+  document.getElementById('admin-feedback').innerHTML = rows_table(fb, 'الإجابة');
+}
+function stat(n,l){ return '<div class="stat"><div class="num">'+n+'</div><div class="lbl">'+l+'</div></div>'; }
+function rows_table(obj, head){
+  const keys = Object.keys(obj).sort(function(a,b){return obj[b]-obj[a]});
+  if(!keys.length) return '<tr><td class="muted">لا بيانات بعد</td></tr>';
+  return '<tr><th>'+head+'</th><th>العدد</th></tr>' + keys.map(function(k){ return '<tr><td>'+k+'</td><td><strong>'+obj[k]+'</strong></td></tr>'; }).join('');
+}
+// فتح اللوحة المخفية عبر #admin
+if(location.hash === '#admin'){ go('s-admin'); }
 
 function go(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
