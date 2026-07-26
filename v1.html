@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قراري — قرارك بعد الثانوية، بوضوح</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1220; --bg2:#151b30; --card:#1b2340; --card2:#222c50;
+  --ink:#f4f6ff; --muted:#9aa6c8; --line:#2c3760;
+  --brand:#4f7cff; --brand2:#7c5cff; --gold:#ffc94d; --green:#3ddc97;
+  --red:#ff6b6b; --amber:#ffb347;
+  --radius:18px;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Tajawal',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.7;
+  min-height:100vh;
+}
+.screen{display:none; min-height:100vh; padding:24px 16px 64px; animation:fade .35s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+.wrap{max-width:760px; margin:0 auto}
+.btn{
+  display:inline-block; border:none; cursor:pointer; font-family:inherit;
+  font-weight:800; font-size:1.05rem; padding:14px 28px; border-radius:14px;
+  transition:transform .15s ease, box-shadow .15s ease; text-align:center;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; box-shadow:0 8px 24px rgba(79,124,255,.35)}
+.btn-primary:hover{box-shadow:0 10px 30px rgba(79,124,255,.5)}
+.btn-ghost{background:transparent; color:var(--muted); border:1.5px solid var(--line)}
+.btn-ghost:hover{color:var(--ink); border-color:var(--brand)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#ff9d4d); color:#221a05}
+.btn-block{display:block; width:100%}
+.btn-sm{padding:9px 18px; font-size:.9rem}
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; margin-bottom:16px}
+.tag{display:inline-block; font-size:.72rem; font-weight:700; padding:3px 10px; border-radius:99px; vertical-align:middle}
+.tag-demo{background:rgba(255,179,71,.15); color:var(--amber); border:1px solid rgba(255,179,71,.4)}
+.tag-ok{background:rgba(61,220,151,.15); color:var(--green)}
+.tag-no{background:rgba(255,107,107,.15); color:var(--red)}
+.tag-warn{background:rgba(255,201,77,.15); color:var(--gold)}
+.muted{color:var(--muted)}
+h1,h2,h3{font-weight:900; line-height:1.35}
+.progress{height:6px; background:var(--line); border-radius:99px; overflow:hidden; margin:18px 0 26px}
+.progress>div{height:100%; background:linear-gradient(90deg,var(--brand),var(--brand2)); border-radius:99px; transition:width .4s ease}
+.topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px}
+.logo{font-weight:900; font-size:1.3rem}
+.logo span{color:var(--brand)}
+.choice{
+  display:flex; align-items:center; gap:14px; width:100%; text-align:right;
+  background:var(--card); border:1.5px solid var(--line); border-radius:var(--radius);
+  padding:16px 18px; margin-bottom:12px; cursor:pointer; font-family:inherit;
+  color:var(--ink); font-size:1rem; font-weight:700; transition:border-color .15s, background .15s;
+}
+.choice:hover{border-color:var(--brand)}
+.choice.selected{border-color:var(--brand); background:var(--card2); box-shadow:0 0 0 3px rgba(79,124,255,.2)}
+.choice .ico{font-size:1.5rem}
+.choice small{display:block; font-weight:400; color:var(--muted); font-size:.85rem}
+input[type=number],input[type=text],select{
+  width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--line);
+  background:var(--bg2); color:var(--ink); font-family:inherit; font-size:1.05rem; font-weight:700;
+}
+input:focus,select:focus{outline:none; border-color:var(--brand)}
+label.fld{display:block; margin:18px 0 6px; font-weight:800}
+.chips{display:flex; flex-wrap:wrap; gap:10px; margin-top:8px}
+.chip{
+  padding:9px 16px; border-radius:99px; border:1.5px solid var(--line);
+  background:var(--bg2); color:var(--muted); cursor:pointer; font-weight:700; font-size:.92rem;
+  font-family:inherit; transition:all .15s;
+}
+.chip.selected{background:rgba(79,124,255,.18); border-color:var(--brand); color:var(--ink)}
+.navrow{display:flex; gap:12px; margin-top:26px}
+.navrow .btn{flex:1}
+.result-path{border-right:4px solid var(--brand); }
+.bigfit{font-size:2.2rem; font-weight:900; color:var(--brand)}
+table.cmp{width:100%; border-collapse:collapse; font-size:.95rem}
+table.cmp th,table.cmp td{padding:12px 10px; border-bottom:1px solid var(--line); text-align:right; vertical-align:top}
+table.cmp th{color:var(--muted); font-weight:700; width:32%}
+table.cmp td:first-child{color:var(--muted); font-weight:700}
+.price-card{position:relative; text-align:center; padding:28px 20px}
+.price-card .amount{font-size:2.6rem; font-weight:900}
+.price-card.featured{border-color:var(--brand); box-shadow:0 0 0 3px rgba(79,124,255,.18)}
+.price-card ul{list-style:none; text-align:right; margin:18px 0; font-size:.92rem}
+.price-card li{padding:7px 0; border-bottom:1px dashed var(--line)}
+.price-card li::before{content:"✓ "; color:var(--green); font-weight:900}
+.share-card{
+  background:linear-gradient(150deg,#1c2a55,#141a33 60%); border:1px solid var(--brand);
+  border-radius:22px; padding:30px 26px; text-align:center; position:relative; overflow:hidden;
+}
+.share-card::before{content:""; position:absolute; top:-60px; left:-60px; width:180px; height:180px;
+  background:radial-gradient(circle,rgba(124,92,255,.4),transparent 70%); border-radius:50%}
+.modal-bg{position:fixed; inset:0; background:rgba(5,8,18,.75); display:none; align-items:center; justify-content:center; padding:20px; z-index:50}
+.modal-bg.open{display:flex}
+.modal{background:var(--card); border-radius:20px; padding:28px; max-width:420px; width:100%; border:1px solid var(--line)}
+.stepdots{display:flex; gap:8px; justify-content:center; margin-bottom:6px}
+.stepdots i{width:34px; height:5px; border-radius:99px; background:var(--line)}
+.stepdots i.on{background:var(--brand)}
+@media (max-width:560px){
+  .btn{font-size:.98rem; padding:13px 20px}
+  .card{padding:18px}
+  .bigfit{font-size:1.8rem}
+}
+.notice{background:rgba(255,179,71,.08); border:1px solid rgba(255,179,71,.35); border-radius:12px; padding:12px 16px; font-size:.85rem; color:var(--amber); margin:14px 0}
+.scenario-tab{display:flex; gap:8px; margin-bottom:18px}
+.scenario-tab button{flex:1; padding:12px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg2); color:var(--muted); font-family:inherit; font-weight:800; font-size:1rem; cursor:pointer}
+.scenario-tab button.on{border-color:var(--gold); color:var(--gold); background:rgba(255,201,77,.08)}
+.rank-row{display:flex; align-items:center; gap:12px; padding:14px; background:var(--bg2); border:1px solid var(--line); border-radius:14px; margin-bottom:10px}
+.rank-num{width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--brand),var(--brand2)); display:flex; align-items:center; justify-content:center; font-weight:900; flex-shrink:0}
+.foot{text-align:center; color:var(--muted); font-size:.78rem; margin-top:40px}
+</style>
+</head>
+<body>
+
+<!-- ============ 1) شاشة البداية ============ -->
+<section id="s-welcome" class="screen active">
+  <div class="wrap" style="text-align:center; padding-top:48px">
+    <div class="logo" style="font-size:2rem">قرار<span>ي</span></div>
+    <h1 style="font-size:2.1rem; margin:22px 0 10px">قرارك بعد الثانوية<br>يستاهل أكثر من تخمين</h1>
+    <p class="muted" style="max-width:520px; margin:0 auto 8px; font-size:1.05rem">
+      نفهم وضعك ونسبتك وميولك، ونقول لك بصراحة: وين تؤهل رسميًا، وين فرصتك واقعية،
+      ووش الخطوة الجاية — بتواريخها.
+    </p>
+    <p style="color:var(--gold); font-weight:700; font-size:.9rem; margin-bottom:30px">
+      ⏳ موسم التسجيل الحالي مفتوح — قرارك اليوم أرخص من قرارك بعد القفل
+    </p>
+
+    <button class="btn btn-primary btn-block" style="max-width:420px; margin:0 auto 12px" onclick="go('s-status')">
+      أنا طالب — ابدأ تقييمي المجاني 🎓
+    </button>
+    <button class="btn btn-ghost btn-block" style="max-width:420px; margin:0 auto" onclick="enterParent()">
+      أنا ولي أمر — أبي أفهم خيارات ولدي 👨‍👩‍👦
+    </button>
+
+    <div style="display:flex; gap:22px; justify-content:center; margin-top:44px; flex-wrap:wrap">
+      <div><div style="font-size:1.6rem">🎯</div><div class="muted" style="font-size:.82rem">أهلية رسمية<br>موثقة بمصدر</div></div>
+      <div><div style="font-size:1.6rem">⚖️</div><div class="muted" style="font-size:.82rem">3 سيناريوهات<br>لترتيب الرغبات</div></div>
+      <div><div style="font-size:1.6rem">👨‍👩‍👦</div><div class="muted" style="font-size:.82rem">مجلس قرار<br>عائلي</div></div>
+      <div><div style="font-size:1.6rem">📅</div><div class="muted" style="font-size:.82rem">خطة تنفيذ<br>بمواعيدها</div></div>
+    </div>
+
+    <div class="notice" style="max-width:520px; margin:34px auto 0; text-align:center">
+      نسخة أولية للتجربة — كل الشروط والأرقام المعروضة <strong>بيانات تجريبية تحتاج تحققًا رسميًا</strong> من مواقع الجامعات والجهات المختصة.
+    </div>
+    <p class="foot">قراري © 2026 · صُنع في الكويت 🇰🇼 · <span style="color:var(--brand); cursor:pointer" onclick="go('s-pricing')">الباقات</span></p>
+  </div>
+</section>
+
+<!-- ============ 2) حالة الطالب ============ -->
+<section id="s-status" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost btn-sm" onclick="go('s-welcome')">← رجوع</button></div>
+    <h2 style="margin:14px 0 4px">أول شي، وين واقف الحين؟</h2>
+    <p class="muted" style="margin-bottom:20px">هذا يحدد وش النوافذ المفتوحة لك فعلًا.</p>
+
+    <button class="choice" onclick="setStatus(this,'final')"><span class="ico">📚</span><span>في الصف الثاني عشر (سنة التخرج)<small>أستعد للتقديم هذا الموسم</small></span></button>
+    <button class="choice" onclick="setStatus(this,'grad-now')"><span class="ico">🎓</span><span>خريج ثانوية هذا العام<small>بيدي النتيجة وأقدم الآن</small></span></button>
+    <button class="choice" onclick="setStatus(this,'grad-old')"><span class="ico">🗂️</span><span>خريج من سنة سابقة<small>أبي أعرف وش يتغير عليّ في القبول</small></span></button>
+    <button class="choice" onclick="setStatus(this,'enrolled')"><span class="ico">🔁</span><span>مسجل جامعيًا حاليًا<small>أفكر بالتحويل أو تغيير المسار</small></span></button>
+
+    <div class="navrow">
+      <button class="btn btn-ghost" onclick="go('s-welcome')">رجوع</button>
+      <button class="btn btn-primary" id="btn-status-next" onclick="startForm()" disabled style="opacity:.4">كمّل ←</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3) النموذج الذكي ============ -->
+<section id="s-form" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost btn-sm" onclick="go('s-status')">← رجوع</button></div>
+    <div class="stepdots" id="stepdots"><i class="on"></i><i></i><i></i><i></i></div>
+    <div class="progress"><div id="formbar" style="width:25%"></div></div>
+
+    <!-- خطوة 1: الأرقام -->
+    <div id="fstep1" class="fstep">
+      <h2>خلّنا نشوف أرقامك 🧮</h2>
+      <p class="muted">هذي أول فلتر: الأهلية الرسمية. جاوب بصراحة — النتيجة لك أنت.</p>
+      <label class="fld">نسبتك في الثانوية (أو المتوقعة) ٪</label>
+      <input type="number" id="in-pct" min="50" max="100" step="0.1" placeholder="مثال: 87.5" inputmode="decimal">
+      <label class="fld">فرعك</label>
+      <div class="chips" id="chips-branch">
+        <button class="chip" data-v="علمي" onclick="pickOne(this,'branch')">علمي 🔬</button>
+        <button class="chip" data-v="أدبي" onclick="pickOne(this,'branch')">أدبي 📖</button>
+      </div>
+      <label class="fld">هل أديت اختبار القدرات؟ <span class="tag tag-demo">اختياري</span></label>
+      <div class="chips" id="chips-apt">
+        <button class="chip" data-v="نعم" onclick="pickOne(this,'apt')">إي، عندي درجتي</button>
+        <button class="chip" data-v="لا" onclick="pickOne(this,'apt')">لا / لسا</button>
+      </div>
+      <div id="apt-score-box" style="display:none">
+        <label class="fld">درجتك في القدرات (من 100)</label>
+        <input type="number" id="in-apt" min="0" max="100" placeholder="مثال: 72" inputmode="decimal">
+      </div>
+    </div>
+
+    <!-- خطوة 2: الميول -->
+    <div id="fstep2" class="fstep" style="display:none">
+      <h2>وش يشدك فعلًا؟ 🧭</h2>
+      <p class="muted">اختر كل ما ينطبق — مو تخصص أحلامك، وش تستمتع فيه وتتفوق فيه.</p>
+      <label class="fld">مواد / مجالات تستمتع فيها وتتفوق فيها</label>
+      <div class="chips" id="chips-interests">
+        <button class="chip" data-v="تقنية" onclick="pickMany(this)">تقنية وبرمجة 💻</button>
+        <button class="chip" data-v="أرقام" onclick="pickMany(this)">أرقام وتحليل 📊</button>
+        <button class="chip" data-v="علوم" onclick="pickMany(this)">علوم وأحياء 🧬</button>
+        <button class="chip" data-v="ناس" onclick="pickMany(this)">تعامل مع الناس 🤝</button>
+        <button class="chip" data-v="كتابة" onclick="pickMany(this)">كتابة وإقناع ✍️</button>
+        <button class="chip" data-v="تصميم" onclick="pickMany(this)">تصميم وإبداع 🎨</button>
+        <button class="chip" data-v="إدارة" onclick="pickMany(this)">تنظيم وقيادة 🧩</button>
+        <button class="chip" data-v="خدمة" onclick="pickMany(this)">خدمة ورعاية 🩺</button>
+      </div>
+      <label class="fld">تخيّل يوم شغل عادي بعد 10 سنين — وش تتقبل؟ (اختر كل المقبول)</label>
+      <div class="chips" id="chips-life">
+        <button class="chip" data-v="مكتب" onclick="pickMany(this)">مكتب وشاشة 🖥️</button>
+        <button class="chip" data-v="ميدان" onclick="pickMany(this)">شغل ميداني 🏗️</button>
+        <button class="chip" data-v="ورديات" onclick="pickMany(this)">ورديات متغيرة 🕐</button>
+        <button class="chip" data-v="جمهور" onclick="pickMany(this)">تعامل يومي مع جمهور 🗣️</button>
+        <button class="chip" data-v="بحث" onclick="pickMany(this)">بحث وتعمق هادئ 🔍</button>
+      </div>
+    </div>
+
+    <!-- خطوة 3: الأولويات -->
+    <div id="fstep3" class="fstep" style="display:none">
+      <h2>وش الأهم لك؟ ⚖️</h2>
+      <p class="muted">رتّب أولويتك الأولى — نفس النسبة تعطي ترتيب رغبات مختلف حسب جوابك.</p>
+      <label class="fld">أولويتك الأولى</label>
+      <div class="chips" id="chips-priority">
+        <button class="chip" data-v="تخصص" onclick="pickOne(this,'priority')">التخصص نفسه أولًا 🎯</button>
+        <button class="chip" data-v="سمعة" onclick="pickOne(this,'priority')">سمعة المؤسسة 🏛️</button>
+        <button class="chip" data-v="توظيف" onclick="pickOne(this,'priority')">التوظيف بعد التخرج 💼</button>
+        <button class="chip" data-v="قبول" onclick="pickOne(this,'priority')">ضمان القبول ✅</button>
+      </div>
+      <label class="fld">إذا ما انقبلت رغبتك الأولى، عندك خطة بديلة؟</label>
+      <div class="chips" id="chips-planb">
+        <button class="chip" data-v="نعم" onclick="pickOne(this,'planb')">إي، واضحة</button>
+        <button class="chip" data-v="جزئيا" onclick="pickOne(this,'planb')">شيء بالبال بس</button>
+        <button class="chip" data-v="لا" onclick="pickOne(this,'planb')">لا، أبدًا 😅</button>
+      </div>
+    </div>
+
+    <!-- خطوة 4: القيود -->
+    <div id="fstep4" class="fstep" style="display:none">
+      <h2>آخر شي: قيودك الواقعية 🧱</h2>
+      <p class="muted">ما نبي نوصي بشي ما يمشي على ظروفك.</p>
+      <label class="fld">الميزانية الدراسية</label>
+      <div class="chips" id="chips-budget">
+        <button class="chip" data-v="حكومي" onclick="pickOne(this,'budget')">حكومي فقط (مجاني) 🏛️</button>
+        <button class="chip" data-v="خاص" onclick="pickOne(this,'budget')">أقدر على جامعة خاصة 💳</button>
+        <button class="chip" data-v="بعثة" onclick="pickOne(this,'budget')">أستهدف بعثة/منحة ✈️</button>
+      </div>
+      <label class="fld">الموقع</label>
+      <div class="chips" id="chips-location">
+        <button class="chip" data-v="كويت" onclick="pickOne(this,'location')">داخل الكويت فقط</button>
+        <button class="chip" data-v="سفر" onclick="pickOne(this,'location')">مستعد للسفر</button>
+      </div>
+      <label class="fld">من يشاركك القرار في البيت؟</label>
+      <div class="chips" id="chips-family">
+        <button class="chip" data-v="مساند" onclick="pickOne(this,'family')">أهلي مساندين لاختياري 💚</button>
+        <button class="chip" data-v="مختلف" onclick="pickOne(this,'family')">عندهم رأي مختلف 🤔</button>
+        <button class="chip" data-v="قراري" onclick="pickOne(this,'family')">القرار قراري لحالي</button>
+      </div>
+    </div>
+
+    <div class="navrow">
+      <button class="btn btn-ghost" id="btn-back" onclick="formNav(-1)">رجوع</button>
+      <button class="btn btn-primary" id="btn-next" onclick="formNav(1)">كمّل ←</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4) النتيجة ============ -->
+<section id="s-result" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost btn-sm" onclick="restart()">↺ من جديد</button></div>
+    <h2 style="margin:10px 0 2px">نتيجتك جاهزة 🎯</h2>
+    <p class="muted" id="result-sub" style="margin-bottom:6px"></p>
+    <span class="tag tag-demo">بيانات تجريبية تحتاج تحققًا رسميًا</span>
+    <div class="notice">النتيجة المجانية تعرض أفضل 3 مسارات + حالة الأهلية. التقرير الكامل، السيناريوهات، تقرير ولي الأمر وخطة التنفيذ ضمن الباقات.</div>
+    <div id="result-list"></div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:18px">
+      <button class="btn btn-gold btn-sm" style="padding:13px" onclick="go('s-scenarios');buildScenarios()">⚖️ سيناريوهات الرغبات</button>
+      <button class="btn btn-ghost btn-sm" style="padding:13px" onclick="go('s-compare');buildCompare()">🔍 قارن تخصصين</button>
+      <button class="btn btn-ghost btn-sm" style="padding:13px" onclick="go('s-parent');buildParent()">👨‍👩‍👦 تقرير ولي الأمر</button>
+      <button class="btn btn-ghost btn-sm" style="padding:13px" onclick="go('s-share');buildShare()">📤 بطاقة مشاركة</button>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:12px" onclick="go('s-pricing')">افتح التقرير الكامل — شوف الباقات</button>
+  </div>
+</section>
+
+<!-- ============ 5) سيناريوهات الرغبات ============ -->
+<section id="s-scenarios" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost btn-sm" onclick="go('s-result')">← النتيجة</button></div>
+    <h2 style="margin:10px 0 4px">ثلاث طرق ترتّب فيها رغباتك</h2>
+    <p class="muted" style="margin-bottom:14px">نفس بياناتك — ثلاث استراتيجيات. <span class="tag tag-demo">بيانات تجريبية تحتاج تحققًا رسميًا</span></p>
+
+    <div class="scenario-tab">
+      <button id="tab-amb" onclick="showScenario('amb')">🚀 طموح</button>
+      <button id="tab-bal" class="on" onclick="showScenario('bal')">⚖️ متوازن</button>
+      <button id="tab-safe" onclick="showScenario('safe')">🛡️ آمن</button>
+    </div>
+    <p id="scenario-logic" class="muted" style="font-size:.9rem; margin-bottom:14px"></p>
+    <div id="scenario-list"></div>
+    <div class="notice" id="scenario-note"></div>
+  </div>
+</section>
+
+<!-- ============ 6) مقارنة تخصصين ============ -->
+<section id="s-compare" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost btn-sm" onclick="go('s-result')">← النتيجة</button></div>
+    <h2 style="margin:10px 0 14px">حائر بين اثنين؟ حطهم وجهًا لوجه 🔍</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px">
+      <select id="cmp-a" onchange="renderCompare()"></select>
+      <select id="cmp-b" onchange="renderCompare()"></select>
+    </div>
+    <div class="card"><table class="cmp" id="cmp-table"></table></div>
+    <p class="muted" style="font-size:.82rem"><span class="tag tag-demo">بيانات تجريبية تحتاج تحققًا رسميًا</span> تحقق من الشروط في موقع الجامعة الرسمي قبل أي قرار.</p>
+  </div>
+</section>
+
+<!-- ============ 7) تقرير ولي الأمر ============ -->
+<section id="s-parent" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost btn-sm" onclick="go('s-result')">← النتيجة</button></div>
+    <h2 style="margin:10px 0 4px">تقرير ولي الأمر 👨‍👩‍👦</h2>
+    <p class="muted" style="margin-bottom:14px">ملخص بلغتكم: التكلفة، المخاطر، والخطة البديلة — بدون مصطلحات معقدة.</p>
+    <span class="tag tag-demo">بيانات تجريبية تحتاج تحققًا رسميًا</span>
+    <div id="parent-report" style="margin-top:14px"></div>
+
+    <div class="card" style="border-color:var(--brand)">
+      <h3 style="margin-bottom:8px">مجلس القرار العائلي 🏠</h3>
+      <p class="muted" style="font-size:.92rem; margin-bottom:14px">سجّل موقفك من أفضل مسارين عند ولدك، وخلّه يسجل موقفه — ونشوف وين الاتفاق وين الخلاف.</p>
+      <div id="council-rows"></div>
+      <button class="btn btn-primary btn-block btn-sm" style="margin-top:10px" onclick="saveCouncil()">وثّق قرار العائلة</button>
+      <p id="council-saved" style="display:none; color:var(--green); font-weight:700; text-align:center; margin-top:10px">✓ تم توثيق القرار — بالتوفيق لولدكم 🤍</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8) بطاقة المشاركة ============ -->
+<section id="s-share" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost btn-sm" onclick="go('s-result')">← النتيجة</button></div>
+    <h2 style="margin:10px 0 4px">شارك توجهك 📤</h2>
+    <p class="muted" style="margin-bottom:16px">البطاقة <strong>ما تعرض نسبتك ولا درجاتك ولا قيودك</strong> — بس توجهك. بياناتك الحساسة تبقى عندك.</p>
+    <div class="share-card" id="share-card"></div>
+    <button class="btn btn-primary btn-block" style="margin-top:16px" onclick="copyShare()">📋 انسخ نص المشاركة</button>
+    <p id="share-copied" style="display:none; color:var(--green); font-weight:700; text-align:center; margin-top:10px">✓ انسخ — أرسله لربعك وخلّهم يسوون تقييمهم</p>
+  </div>
+</section>
+
+<!-- ============ 9) الباقات ============ -->
+<section id="s-pricing" class="screen">
+  <div class="wrap">
+    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost btn-sm" onclick="go('s-welcome')">← البداية</button></div>
+    <h2 style="margin:10px 0 4px; text-align:center">باقات قراري</h2>
+    <p class="muted" style="text-align:center; margin-bottom:20px">المجاني يقول لك وين واقف. المدفوع يمشي معك لين تُقبل.</p>
+
+    <div class="card price-card">
+      <h3>توجّه</h3><div class="amount">0 <small style="font-size:1rem">د.ك</small></div>
+      <ul>
+        <li>أفضل 3 مسارات + نسبة التوافق</li>
+        <li>حالة الأهلية الرسمية لكل مسار</li>
+        <li>الخطوة التالية الأهم الآن</li>
+        <li>بطاقة مشاركة (بدون بيانات حساسة)</li>
+      </ul>
+      <button class="btn btn-ghost btn-block btn-sm" onclick="go('s-status')">ابدأ مجانًا</button>
+    </div>
+
+    <div class="card price-card featured">
+      <span class="tag tag-warn" style="position:absolute; top:14px; left:14px">الأكثر طلبًا</span>
+      <h3>قرار</h3><div class="amount">9 <small style="font-size:1rem">د.ك</small></div>
+      <ul>
+        <li>التقرير الكامل: كل المسارات والأبعاد الخمسة</li>
+        <li>سيناريوهات الرغبات: طموح / متوازن / آمن</li>
+        <li>مقارنة تفصيلية بين أي تخصصين</li>
+        <li>تقرير ولي الأمر + مجلس القرار العائلي</li>
+        <li>خطة تنفيذ بمواعيدها + خطة بديلة</li>
+      </ul>
+      <button class="btn btn-primary btn-block btn-sm" onclick="openPay('قرار — 9 د.ك')">اشترك — 9 د.ك</button>
+    </div>
+
+    <div class="card price-card">
+      <h3>مرافقة <span class="tag tag-warn">بلس</span></h3><div class="amount">29 <small style="font-size:1rem">د.ك</small></div>
+      <ul>
+        <li>كل باقة «قرار»</li>
+        <li>متابعة لين إتمام القبول</li>
+        <li>تذكيرات بالمواعيد وإعادة تقييم بعد كل نتيجة</li>
+        <li>جلسة مراجعة ترتيب الرغبات قبل القفل</li>
+        <li>دعم أسئلة عبر المحادثة طوال الموسم</li>
+      </ul>
+      <button class="btn btn-gold btn-block btn-sm" onclick="openPay('مرافقة بلس — 29 د.ك')">اشترك — 29 د.ك</button>
+    </div>
+    <p class="foot">أسعار النسخة الأولى — قابلة للتعديل بعد الاختبار الميداني</p>
+  </div>
+</section>
+
+<!-- ============ نافذة الدفع التجريبية ============ -->
+<div class="modal-bg" id="pay-modal">
+  <div class="modal">
+    <h3 style="margin-bottom:4px">إتمام الاشتراك</h3>
+    <p class="muted" id="pay-plan" style="margin-bottom:16px"></p>
+    <label class="fld">رقم البطاقة (تجريبي)</label>
+    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+      <div><label class="fld">الانتهاء</label><input type="text" placeholder="MM/YY" maxlength="5"></div>
+      <div><label class="fld">CVV</label><input type="text" placeholder="123" maxlength="3"></div>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:18px" onclick="fakePay(this)">ادفع الآن</button>
+    <button class="btn btn-ghost btn-block btn-sm" style="margin-top:10px" onclick="closePay()">إلغاء</button>
+    <p class="notice" style="margin:14px 0 0; text-align:center">دفع تجريبي — لن يتم خصم أي مبلغ. الدفع الفعلي (KNET / Apple Pay) يُفعّل في النسخة الإنتاجية.</p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   قراري — نموذج أولي تجريبي
+   كل الأرقام أدناه بيانات تجريبية تحتاج تحققًا رسميًا من
+   المصادر الرسمية (جامعة الكويت، التطبيقي، الجامعات الخاصة...)
+   ============================================================ */
+const DEMO_TAG = 'بيانات تجريبية تحتاج تحققًا رسميًا';
+
+const PROGRAMS = [
+  { id:'ku-cs',  inst:'جامعة الكويت', name:'هندسة الحاسوب', type:'حكومي', branch:'علمي',
+    minPct:85, cutoff:90, aptitude:'مطلوب', interview:false, tuition:0, years:4,
+    interests:['تقنية','أرقام'], life:['مكتب','بحث'],
+    study:'مواد برمجة ورياضيات كثيفة، مشاريع تطبيقية من السنة الثانية.',
+    career:'مكاتب تقنية، شركات اتصالات وبنوك، ومرونة عالية في التنقل الوظيفي.',
+    next:'سجّل في اختبار القدرات قبل قفل التسجيل، وجهّز شهادة الثانوية.',
+    deadline:'نافذة التسجيل: يوليو — أغسطس (تحقق من الموقع الرسمي)' },
+  { id:'ku-med', inst:'جامعة الكويت', name:'الطب البشري', type:'حكومي', branch:'علمي',
+    minPct:90, cutoff:96, aptitude:'مطلوب', interview:true, tuition:0, years:7,
+    interests:['علوم','خدمة','ناس'], life:['ورديات','جمهور'],
+    study:'سبع سنوات، ضغط دراسي عالٍ، وتدريب سريري مبكر.',
+    career:'مستشفيات، ورديات، مسار تخصص طويل — مكانة ورسالة أكثر منه وظيفة.',
+    next:'تأكد من شروط المقابلة الشخصية وموعد اختبار القدرات فورًا.',
+    deadline:'نافذة التسجيل: يوليو (تحقق من الموقع الرسمي)' },
+  { id:'ku-bus', inst:'جامعة الكويت', name:'إدارة الأعمال', type:'حكومي', branch:'كلاهما',
+    minPct:75, cutoff:82, aptitude:'اختياري', interview:false, tuition:0, years:4,
+    interests:['إدارة','أرقام','ناس'], life:['مكتب','جمهور'],
+    study:'مزيج نظري وتطبيقي، تخصص دقيق (تمويل/تسويق/إدارة) بعد السنة الأولى.',
+    career:'بنوك وشركات، بيئة مكتبية، نمو سريع لمن يبني مهارات تحليلية.',
+    next:'جهّز المستندات وراجع تخصصات الكلية الدقيقة قبل الترتيب.',
+    deadline:'نافذة التسجيل: يوليو — أغسطس (تحقق من الموقع الرسمي)' },
+  { id:'ku-law', inst:'جامعة الكويت', name:'القانون', type:'حكومي', branch:'أدبي',
+    minPct:78, cutoff:85, aptitude:'لا', interview:false, tuition:0, years:4,
+    interests:['كتابة','ناس'], life:['جمهور','بحث'],
+    study:'قراءة وحفظ وتحليل نصوص كثيف، تدريب في محاكم ومراكز قانونية.',
+    career:'محاماة، نيابة، مستشار قانوني — يحتاج صبرًا وسنوات بناء سمعة.',
+    next:'راجع شروط القبول الأدبي وموعد التقديم.',
+    deadline:'نافذة التسجيل: يوليو — أغسطس (تحقق من الموقع الرسمي)' },
+  { id:'ku-psy', inst:'جامعة الكويت', name:'علم النفس', type:'حكومي', branch:'كلاهما',
+    minPct:70, cutoff:76, aptitude:'لا', interview:false, tuition:0, years:4,
+    interests:['ناس','خدمة','بحث'], life:['جمهور','بحث'],
+    study:'نظريات وإحصاء وتطبيقات ميدانية تدريجية.',
+    career:'مراكز إرشاد ومدارس وعيادات — أغلب المسارات العليا تحتاج ماجستير.',
+    next:'جهّز المستندات واطلع على خطة القسم.',
+    deadline:'نافذة التسجيل: يوليو — أغسطس (تحقق من الموقع الرسمي)' },
+  { id:'paaet-it', inst:'التطبيقي (PAAET)', name:'تكنولوجيا المعلومات', type:'حكومي', branch:'علمي',
+    minPct:65, cutoff:72, aptitude:'لا', interview:false, tuition:0, years:2,
+    interests:['تقنية'], life:['مكتب'],
+    study:'دبلوم تطبيقي عملي مكثف — دخول سوق العمل أسرع.',
+    career:'دعم أنظمة وتشغيل تقني، مع إمكان إكمال البكالوريوس لاحقًا.',
+    next:'سجّل في بوابة الهيئة وراجع موعد المقابلة إن وجدت.',
+    deadline:'نافذة التسجيل: تختلف حسب الكلية (تحقق من الموقع الرسمي)' },
+  { id:'paaet-nur', inst:'التطبيقي (PAAET)', name:'التمريض', type:'حكومي', branch:'علمي',
+    minPct:70, cutoff:78, aptitude:'لا', interview:true, tuition:0, years:3,
+    interests:['خدمة','علوم','ناس'], life:['ورديات','جمهور'],
+    study:'تدريب عملي مبكر في مستشفيات، انضباط والتزام عالٍ.',
+    career:'مستشفيات ومراكز صحية، ورديات — طلب مستقر على الكوادر الوطنية.',
+    next:'تأكد من متطلبات الفحص الطبي والمقابلة.',
+    deadline:'نافذة التسجيل: تختلف حسب الكلية (تحقق من الموقع الرسمي)' },
+  { id:'aum-me', inst:'AUM (جامعة خاصة)', name:'الهندسة الميكانيكية', type:'خاص', branch:'علمي',
+    minPct:70, cutoff:74, aptitude:'اختياري', interview:false, tuition:6500, years:4,
+    interests:['تقنية','أرقام','تصميم'], life:['ميدان','مكتب'],
+    study:'مختبرات حديثة ومشاريع تصميم، بيئة خاصة برسوم سنوية.',
+    career:'شركات نفط ومقاولات وصيانة، شغل ميداني ومكتبي معًا.',
+    next:'احسب التكلفة الكلية مع العائلة واسأل عن المنح الداخلية.',
+    deadline:'تسجيل فصول متعددة خلال السنة (تحقق من الموقع الرسمي)' },
+  { id:'gust-acc', inst:'GUST (جامعة خاصة)', name:'المحاسبة', type:'خاص', branch:'كلاهما',
+    minPct:65, cutoff:70, aptitude:'لا', interview:false, tuition:5800, years:4,
+    interests:['أرقام','إدارة'], life:['مكتب'],
+    study:'منهج أمريكي، مواد محاسبة ومال، شهادات مهنية موازية (CPA/ACCA).',
+    career:'شركات تدقيق وبنوك، مكتبي، نمو ثابت مع الشهادات المهنية.',
+    next:'راجع الرسوم والمنح الدراسية المتاحة للطلبة المتفوقين.',
+    deadline:'تسجيل فصول متعددة خلال السنة (تحقق من الموقع الرسمي)' },
+  { id:'auk-comm', inst:'AUK (جامعة خاصة)', name:'الإعلام والاتصال', type:'خاص', branch:'كلاهما',
+    minPct:60, cutoff:68, aptitude:'لا', interview:false, tuition:6000, years:4,
+    interests:['كتابة','تصميم','ناس'], life:['جمهور','ميدان'],
+    study:'مشاريع إنتاج عملية، بيئة ليبرالية، لغة التدريس إنجليزية.',
+    career:'إعلام وتسويق ومحتوى — سوق تنافسي يكافئ المهارة العملية.',
+    next:'تأكد من متطلبات اللغة الإنجليزية للقبول.',
+    deadline:'تسجيل فصول متعددة خلال السنة (تحقق من الموقع الرسمي)' },
+];
+
+/* حالة المستخدم */
+const S = { status:null, pct:null, branch:null, aptAnswered:null, apt:null,
+  interests:[], life:[], priority:null, planb:null, budget:null, location:null, family:null };
+let formStep = 1;
+let RESULTS = [];
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0});
+}
+function setStatus(el,v){
+  document.querySelectorAll('#s-status .choice').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected'); S.status=v;
+  const b=document.getElementById('btn-status-next'); b.disabled=false; b.style.opacity=1;
+}
+function enterParent(){
+  // وضع ولي الأمر: عرض تقرير تجريبي ببيانات افتراضية
+  Object.assign(S,{status:'grad-now',pct:87,branch:'علمي',aptAnswered:'لا',apt:null,
+    interests:['تقنية','أرقام'],life:['مكتب'],priority:'توظيف',planb:'جزئيا',budget:'حكومي',location:'كويت',family:'مختلف'});
+  computeResults(); go('s-parent'); buildParent();
+}
+function startForm(){ go('s-form'); showStep(1); }
+function pickOne(el,group){
+  el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  const v = el.dataset.v;
+  if(group==='branch') S.branch=v;
+  if(group==='apt'){ S.aptAnswered=v; document.getElementById('apt-score-box').style.display = (v==='نعم')?'block':'none'; }
+  if(group==='priority') S.priority=v;
+  if(group==='planb') S.planb=v;
+  if(group==='budget') S.budget=v;
+  if(group==='location') S.location=v;
+  if(group==='family') S.family=v;
+}
+function pickMany(el){
+  el.classList.toggle('selected');
+  const v=el.dataset.v;
+  const arr = el.parentElement.id==='chips-interests' ? S.interests : S.life;
+  const i=arr.indexOf(v); i>=0 ? arr.splice(i,1) : arr.push(v);
+}
+function showStep(n){
+  formStep=n;
+  for(let i=1;i<=4;i++) document.getElementById('fstep'+i).style.display = (i===n)?'block':'none';
+  document.querySelectorAll('#stepdots i').forEach((d,i)=>d.classList.toggle('on', i<n));
+  document.getElementById('formbar').style.width = (n*25)+'%';
+  document.getElementById('btn-next').textContent = (n===4)?'شوف نتيجتي 🎯':'كمّل ←';
+}
+function formNav(dir){
+  if(dir===-1){
+    if(formStep===1){ go('s-status'); return; }
+    showStep(formStep-1); return;
+  }
+  // تحقق قبل التقدم
+  if(formStep===1){
+    const pct = parseFloat(document.getElementById('in-pct').value);
+    if(!pct || pct<50 || pct>100){ alert('أدخل نسبتك بين 50 و 100'); return; }
+    if(!S.branch){ alert('اختر فرعك (علمي / أدبي)'); return; }
+    if(!S.aptAnswered){ alert('جاوب على سؤال اختبار القدرات'); return; }
+    S.pct=pct;
+    if(S.aptAnswered==='نعم'){
+      const a=parseFloat(document.getElementById('in-apt').value);
+      if(a>=0 && a<=100) S.apt=a;
+    }
+  }
+  if(formStep===2 && S.interests.length===0){ alert('اختر مجالًا واحدًا على الأقل يشدك'); return; }
+  if(formStep===3 && !S.priority){ alert('اختر أولويتك الأولى'); return; }
+  if(formStep===4){
+    if(!S.budget || !S.location){ alert('جاوب على الميزانية والموقع'); return; }
+    computeResults(); go('s-result'); renderResult(); return;
+  }
+  showStep(formStep+1);
+}
+
+/* ============ محرك القرار ============ */
+function adjustedPct(p){
+  // معدل مكافئ تجريبي عند توفر درجة القدرات: 60% نسبة + 40% قدرات
+  if(p.aptitude==='مطلوب' && S.apt!==null) return S.pct*0.6 + S.apt*0.4;
+  return S.pct;
+}
+function computeResults(){
+  RESULTS = PROGRAMS.map(p=>{
+    // 1) الأهلية الرسمية
+    let elig='مؤهل', eligNote='';
+    const branchOK = p.branch==='كلاهما' || p.branch===S.branch;
+    if(!branchOK){ elig='غير مؤهل'; eligNote='التخصص مقيد بالفرع '+p.branch; }
+    else if(S.pct < p.minPct){ elig='غير مؤهل'; eligNote='نسبتك أقل من الحد الأدنى التجريبي ('+p.minPct+'٪)'; }
+    else if(p.aptitude==='مطلوب' && S.aptAnswered!=='نعم'){ elig='يحتاج تحققًا'; eligNote='القبول يعتمد على درجة القدرات — أدخل درجتك لاحقًا'; }
+    if(p.interview && elig==='مؤهل') eligNote='يشترط مقابلة شخصية';
+    // قيد الميزانية
+    if(S.budget==='حكومي' && p.type==='خاص'){ elig='خارج الميزانية'; eligNote='جامعة خاصة برسوم — اخترت «حكومي فقط»'; }
+
+    // 2) الميول
+    const iHit = p.interests.filter(t=>S.interests.includes(t)).length;
+    const lHit = p.life.filter(t=>S.life.includes(t)).length;
+    let fit = 35 + iHit*22 + lHit*9 + Math.min(10, Math.max(0,(S.pct-p.minPct))*1.2);
+    if(S.priority==='توظيف' && ['ku-cs','paaet-it','ku-med','gust-acc','paaet-nur'].includes(p.id)) fit+=6;
+    if(S.priority==='سمعة' && p.inst==='جامعة الكويت') fit+=6;
+    fit = Math.round(Math.max(20, Math.min(97, fit)));
+
+    // 3) فرصة المنافسة (تقدير تجريبي)
+    const margin = Math.round((adjustedPct(p) - p.cutoff)*10)/10;
+    let comp='—';
+    if(elig==='مؤهل' || elig==='يحتاج تحققًا'){
+      comp = margin>=5 ? 'مرتفعة' : (margin>=-5 ? 'متوسطة' : 'منخفضة');
+    }
+    return { p, fit, elig, eligNote, comp, margin };
+  }).sort((a,b)=>b.fit-a.fit);
+}
+
+function eligTag(e){
+  if(e==='مؤهل') return '<span class="tag tag-ok">✓ مؤهل</span>';
+  if(e==='غير مؤهل') return '<span class="tag tag-no">✗ غير مؤهل</span>';
+  if(e==='خارج الميزانية') return '<span class="tag tag-no">خارج الميزانية</span>';
+  return '<span class="tag tag-warn">؟ يحتاج تحققًا</span>';
+}
+function compTag(c){
+  if(c==='مرتفعة') return '<span class="tag tag-ok">منافسة مرتفعة</span>';
+  if(c==='متوسطة') return '<span class="tag tag-warn">منافسة متوسطة</span>';
+  if(c==='منخفضة') return '<span class="tag tag-no">منافسة منخفضة</span>';
+  return '<span class="tag tag-demo">غير متاحة</span>';
+}
+
+function renderResult(){
+  const eligible = RESULTS.filter(r=>r.elig==='مؤهل'||r.elig==='يحتاج تحققًا');
+  document.getElementById('result-sub').textContent =
+    'نسبتك '+S.pct+'٪ · فرع '+S.branch+' · من أصل '+PROGRAMS.length+' مسارات تجريبية، أنت مؤهل/قريب من '+eligible.length;
+  const top3 = RESULTS.slice(0,3);
+  document.getElementById('result-list').innerHTML = top3.map((r,i)=>`
+    <div class="card result-path">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap">
+        <div>
+          <div class="muted" style="font-size:.85rem">${r.p.inst}</div>
+          <h3 style="font-size:1.2rem">${i+1}. ${r.p.name}</h3>
+        </div>
+        <div style="text-align:center"><div class="bigfit">${r.fit}٪</div><div class="muted" style="font-size:.75rem">توافق الميول</div></div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin:10px 0">${eligTag(r.elig)} ${compTag(r.comp)}</div>
+      ${r.eligNote?`<p class="muted" style="font-size:.85rem">⚠️ ${r.eligNote}</p>`:''}
+      <p style="font-size:.95rem; margin-top:8px"><strong>خطوتك الجاية:</strong> ${r.p.next}</p>
+      <p class="muted" style="font-size:.82rem">📅 ${r.p.deadline}</p>
+    </div>`).join('');
+}
+
+/* ============ السيناريوهات ============ */
+let scenData={};
+function buildScenarios(){
+  const ok = RESULTS.filter(r=>r.elig==='مؤهل'||r.elig==='يحتاج تحققًا');
+  const safe = [...ok].sort((a,b)=>b.margin-a.margin).slice(0,4);
+  const amb  = [...RESULTS].sort((a,b)=>b.fit-a.fit).slice(0,4);
+  const bal  = [];
+  const bestFit = ok[0], bestMargin=[...ok].sort((a,b)=>b.margin-a.margin)[0];
+  [bestFit, bestMargin, ok[1], safe[safe.length-1]].forEach(x=>{ if(x && !bal.includes(x)) bal.push(x); });
+  scenData={amb,bal,safe};
+  showScenario('bal');
+}
+function showScenario(k){
+  ['amb','bal','safe'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('on', t===k));
+  const logic={
+    amb:'🚀 الطموح: رغباتك مرتبة بالتوافق الأعلى مع ميولك أولًا، حتى لو المنافسة أصعب — لمن يقبل المخاطرة ومعه خطة بديلة.',
+    bal:'⚖️ المتوازن: أول رغبة هي الأنسب لميولك، والثانية أقوى فرصة قبول، والباقي تنويع ذكي. مناسب لأغلب الطلبة.',
+    safe:'🛡️ الآمن: الأولوية لضمان مقعد — مرتب بأعلى هامش قبول. مناسب إذا «القبول المضمون» أهم من التخصص المثالي.'
+  }[k];
+  document.getElementById('scenario-logic').textContent=logic;
+  const list=scenData[k]||[];
+  document.getElementById('scenario-list').innerHTML = list.length ? list.map((r,i)=>`
+    <div class="rank-row">
+      <div class="rank-num">${i+1}</div>
+      <div style="flex:1">
+        <strong>${r.p.name}</strong> <span class="muted" style="font-size:.85rem">— ${r.p.inst}</span><br>
+        <span style="font-size:.8rem">${eligTag(r.elig)} ${compTag(r.comp)}</span>
+      </div>
+      <div style="text-align:center"><strong style="color:var(--brand)">${r.fit}٪</strong><br><span class="muted" style="font-size:.7rem">ميول</span></div>
+    </div>`).join('')
+    : '<div class="notice">ما فيه مسارات كافية لهذا السيناريو ببياناتك الحالية — راجع القيود المدخلة.</div>';
+  const note = S.planb==='لا'
+    ? '💡 ذكرت أنه ما عندك خطة بديلة — ننصحك تعتمد «الآمن» أو تضيف رغبة رابعة مضمونة القبول قبل القفل.'
+    : '💡 عندك خطة بديلة — تقدر تأخذ مخاطرة محسوبة في الرغبة الأولى.';
+  document.getElementById('scenario-note').innerHTML = note + ' <span class="tag tag-demo">'+DEMO_TAG+'</span>';
+}
+
+/* ============ المقارنة ============ */
+function buildCompare(){
+  const opts = PROGRAMS.map(p=>`<option value="${p.id}">${p.name} — ${p.inst}</option>`).join('');
+  const a=document.getElementById('cmp-a'), b=document.getElementById('cmp-b');
+  a.innerHTML=opts; b.innerHTML=opts;
+  const top=RESULTS.slice(0,2);
+  a.value = top[0]? top[0].p.id : PROGRAMS[0].id;
+  b.value = top[1]? top[1].p.id : PROGRAMS[1].id;
+  renderCompare();
+}
+function renderCompare(){
+  const A=PROGRAMS.find(p=>p.id===document.getElementById('cmp-a').value);
+  const B=PROGRAMS.find(p=>p.id===document.getElementById('cmp-b').value);
+  const rA=RESULTS.find(r=>r.p.id===A.id), rB=RESULTS.find(r=>r.p.id===B.id);
+  const cost = p => p.tuition===0 ? 'حكومي — بدون رسوم (تجريبي)' : '≈ '+p.tuition.toLocaleString()+' د.ك سنويًا (تجريبي)';
+  const rows=[
+    ['الجهة', A.inst, B.inst],
+    ['نمط الدراسة', A.study, B.study],
+    ['المدة', A.years+' سنوات', B.years+' سنوات'],
+    ['التكلفة', cost(A), cost(B)],
+    ['أهليتك', rA? rA.elig : '—', rB? rB.elig : '—'],
+    ['فرصة المنافسة', rA? rA.comp : '—', rB? rB.comp : '—'],
+    ['توافق ميولك', rA? rA.fit+'٪' : '—', rB? rB.fit+'٪' : '—'],
+    ['نمط الحياة الوظيفية', A.career, B.career],
+  ];
+  document.getElementById('cmp-table').innerHTML =
+    `<tr><th></th><th style="color:var(--brand)">${A.name}</th><th style="color:var(--gold)">${B.name}</th></tr>` +
+    rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+}
+
+/* ============ تقرير ولي الأمر ============ */
+function buildParent(){
+  const ok = RESULTS.filter(r=>r.elig==='مؤهل'||r.elig==='يحتاج تحققًا');
+  const top = ok[0], planB = ok[1] || RESULTS[1];
+  const costTxt = top.p.tuition===0 ? 'مؤسسة حكومية — بدون رسوم دراسية تقريبًا' : 'رسوم تقريبية '+top.p.tuition.toLocaleString()+' د.ك سنويًا × '+top.p.years+' سنوات';
+  const risk = top.comp==='مرتفعة' ? 'منخفضة — فرصة القبول جيدة بإذن الله' : top.comp==='متوسطة' ? 'متوسطة — يحتاج ترتيب رغبات ذكي وخطة بديلة' : 'مرتفعة — لا تعتمدوا على هذا المسار وحده';
+  document.getElementById('parent-report').innerHTML = `
+    <div class="card">
+      <h3 style="margin-bottom:10px">الخلاصة التنفيذية</h3>
+      <table class="cmp">
+        <tr><td>المسار الأنسب لولدكم</td><td><strong>${top.p.name}</strong> — ${top.p.inst} (توافق ميول ${top.fit}٪)</td></tr>
+        <tr><td>التكلفة</td><td>${costTxt} <span class="tag tag-demo">تجريبي</span></td></tr>
+        <tr><td>مدة الدراسة</td><td>${top.p.years} سنوات</td></tr>
+        <tr><td>مخاطر عدم القبول</td><td>${risk}</td></tr>
+        <tr><td>الخطة البديلة</td><td>${planB ? planB.p.name+' — '+planB.p.inst : 'لم تُحدد بعد'}</td></tr>
+        <tr><td>أقرب التزام مطلوب</td><td>${top.p.next}</td></tr>
+        <tr><td>الموعد</td><td>${top.p.deadline}</td></tr>
+      </table>
+    </div>
+    <div class="notice">هذا التقرير يستخدم بيانات تجريبية لعرض الفكرة. في النسخة الرسمية، كل شرط وموعد مربوط بمصدره الرسمي وتاريخ تحققه. <strong>${DEMO_TAG}</strong></div>`;
+  // مجلس القرار
+  const two = ok.slice(0,2);
+  document.getElementById('council-rows').innerHTML = two.map(r=>`
+    <div class="rank-row">
+      <div style="flex:1"><strong>${r.p.name}</strong> <span class="muted" style="font-size:.85rem">— ${r.p.inst}</span></div>
+      <div style="display:flex; gap:6px">
+        <button class="chip" onclick="this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">مؤيد 👍</button>
+        <button class="chip" onclick="this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">متردد 🤔</button>
+        <button class="chip" onclick="this.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));this.classList.add('selected')">رافض 👎</button>
+      </div>
+    </div>`).join('');
+}
+function saveCouncil(){ document.getElementById('council-saved').style.display='block'; }
+
+/* ============ بطاقة المشاركة ============ */
+function buildShare(){
+  const top3 = RESULTS.slice(0,3);
+  const persona = S.interests.includes('تقنية')?'عقل تقني 💻':S.interests.includes('خدمة')?'قلب خدمة 🩺':S.interests.includes('كتابة')?'صوت مؤثر ✍️':S.interests.includes('أرقام')?'محلل بالفطرة 📊':'مستكشف 🧭';
+  document.getElementById('share-card').innerHTML = `
+    <div class="logo" style="font-size:1.1rem; margin-bottom:6px">قرار<span>ي</span></div>
+    <div style="font-size:2.6rem; margin:6px 0">${persona.split(' ').pop()}</div>
+    <h3 style="margin-bottom:4px">${persona}</h3>
+    <p class="muted" style="font-size:.85rem; margin-bottom:14px">سويت تقييم قراري — وهذي مساراتي المتوقعة:</p>
+    ${top3.map((r,i)=>`<div style="padding:8px 0; border-top:1px dashed var(--line)"><strong>${i+1}. ${r.p.name}</strong> <span class="muted" style="font-size:.85rem">${r.p.inst}</span> · ${eligTag(r.elig)}</div>`).join('')}
+    <p style="margin-top:16px; font-weight:800; color:var(--brand)">جرب تقييمك المجاني — qarari.kw</p>`;
+}
+function copyShare(){
+  const top3 = RESULTS.slice(0,3);
+  const txt = 'سويت تقييم «قراري» 🎯\nمساراتي المتوقعة:\n' +
+    top3.map((r,i)=>(i+1)+'. '+r.p.name+' — '+r.p.inst).join('\n') +
+    '\nجرب تقييمك المجاني: qarari.kw';
+  const done=()=>{ document.getElementById('share-copied').style.display='block'; };
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(done).catch(()=>fallbackCopy(txt,done)); }
+  else fallbackCopy(txt,done);
+}
+function fallbackCopy(txt,done){
+  const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta);
+  ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); done();
+}
+
+/* ============ الدفع التجريبي ============ */
+function openPay(plan){ document.getElementById('pay-plan').textContent='الباقة: '+plan; document.getElementById('pay-modal').classList.add('open'); }
+function closePay(){ document.getElementById('pay-modal').classList.remove('open'); }
+function fakePay(btn){
+  btn.textContent='جاري المعالجة…'; btn.disabled=true;
+  setTimeout(()=>{ btn.textContent='✓ تم (تجريبي)'; setTimeout(()=>{ closePay(); btn.textContent='ادفع الآن'; btn.disabled=false; go('s-result'); },900); },1200);
+}
+function restart(){ location.reload(); }
+</script>
+</body>
+</html>
