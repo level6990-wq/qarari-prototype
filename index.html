@@ -19,74 +19,133 @@
 <meta name="twitter:description" content="مستشارك الأكاديمي لاختيار التخصص من مصادر جامعة الكويت الرسمية.">
 <meta name="twitter:image" content="https://level6990-wq.github.io/qarari-prototype/og-cover.png">
 <meta name="description" content="مستشارك الأكاديمي لاختيار التخصص من مصادر جامعة الكويت الرسمية. جاوب على كم سؤال وشوف أقرب مسار يناسبك.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1220'/%3E%3Ctext x='32' y='44' font-size='36' font-family='sans-serif' font-weight='900' text-anchor='middle' fill='%234f7cff'%3E%D9%82%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230C101E'/%3E%3Ctext x='32' y='44' font-size='36' font-family='sans-serif' font-weight='900' text-anchor='middle' fill='%235E7FE6'%3E%D9%82%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0e1220; --bg2:#151b30; --card:#1b2340; --line:#2c3760;
-  --ink:#f4f6ff; --muted:#9aa6c8;
-  --brand:#4f7cff; --brand2:#7c5cff; --gold:#ffc94d; --green:#3ddc97;
-  --red:#ff6b6b; --amber:#ffb347; --radius:18px;
+  /* هوية قراري — §٥ من وثيقة الهوية: هدوء فاخر، تشبع أقل */
+  --bg:#0C101E; --bg2:#121A2E; --card:#151E33; --line:#232F52;
+  --line-soft:rgba(147,161,198,.14);
+  --ink:#F2F5FF; --muted:#93A1C6;
+  --brand:#5E7FE6; --brand2:#7B68D8; --brand-soft:rgba(94,127,230,.14);
+  --gold:#D8B26E; --green:#46C79B; --red:#E9756D; --amber:#D8A966;
+  --radius:18px;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --shadow-sm:0 1px 2px rgba(3,6,18,.45);
+  --shadow-md:0 8px 24px rgba(3,6,18,.4);
+  --shadow-lg:0 20px 48px rgba(3,6,18,.5);
+  --ring:0 0 0 3px rgba(94,127,230,.32);
 }
 *{box-sizing:border-box; margin:0; padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Tajawal',system-ui,sans-serif; background:var(--bg); color:var(--ink); line-height:1.75; min-height:100vh}
-.screen{display:none; min-height:100vh; padding:24px 16px 70px; animation:fade .3s ease}
+html{scroll-behavior:smooth; -webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Sans Arabic','Tajawal',system-ui,sans-serif; color:var(--ink); line-height:1.7; min-height:100vh;
+  background:radial-gradient(900px 480px at 50% -8%, rgba(94,127,230,.09), transparent 62%), var(--bg);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility}
+::selection{background:rgba(94,127,230,.4); color:#fff}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line); border-radius:99px; border:2px solid var(--bg)}
+.screen{display:none; min-height:100vh; padding:28px 18px calc(84px + env(safe-area-inset-bottom)); animation:rise 200ms var(--ease)}
 .screen.active{display:block}
-@keyframes fade{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+@keyframes rise{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+@keyframes pop{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:none}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important}
+}
 .wrap{max-width:680px; margin:0 auto}
-.btn{display:inline-block; border:none; cursor:pointer; font-family:inherit; font-weight:800; font-size:1.05rem; padding:15px 30px; border-radius:14px; transition:transform .15s, box-shadow .15s; text-align:center; text-decoration:none}
+/* ── الأزرار — مفتاح مصقول لا زر فاقع ── */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:1.02rem; padding:14px 26px; min-height:52px; border-radius:13px; text-align:center; text-decoration:none; color:var(--ink);
+  transition:transform 140ms var(--ease), box-shadow 180ms var(--ease), border-color 180ms var(--ease), background 180ms var(--ease), color 180ms var(--ease), opacity 180ms var(--ease)}
+.btn:hover{transform:translateY(-1px)}
 .btn:active{transform:scale(.97)}
-.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; box-shadow:0 8px 24px rgba(79,124,255,.35)}
-.btn-ghost{background:transparent; color:var(--muted); border:1.5px solid var(--line)}
-.btn-ghost:hover{color:var(--ink); border-color:var(--brand)}
-.btn-block{display:block; width:100%}
-.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:24px; margin-bottom:16px}
-.tag{display:inline-block; font-size:.72rem; font-weight:700; padding:3px 10px; border-radius:99px}
-.tag-ok{background:rgba(61,220,151,.15); color:var(--green)}
-.tag-no{background:rgba(255,107,107,.15); color:var(--red)}
-.tag-warn{background:rgba(255,201,77,.15); color:var(--gold)}
+.btn:focus-visible{outline:none; box-shadow:var(--ring)}
+.btn:disabled{opacity:.5; cursor:not-allowed; transform:none}
+.topbar .btn{min-height:0}
+.btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff;
+  box-shadow:0 4px 18px rgba(94,127,230,.3), inset 0 1px 0 rgba(255,255,255,.14)}
+.btn-primary:hover{box-shadow:0 10px 28px rgba(94,127,230,.42), inset 0 1px 0 rgba(255,255,255,.14)}
+.btn-ghost{background:transparent; color:var(--muted); border:1px solid var(--line)}
+.btn-ghost:hover{color:var(--ink); border-color:rgba(147,161,198,.5); background:rgba(147,161,198,.06)}
+.btn-block{display:flex; width:100%}
+/* زر واتساب — لونه الرسمي مع عمق هادئ */
+[data-t="r.waShare"]{box-shadow:0 6px 22px rgba(37,211,102,.24), inset 0 1px 0 rgba(255,255,255,.2)}
+[data-t="r.waShare"]:hover{box-shadow:0 12px 30px rgba(37,211,102,.34), inset 0 1px 0 rgba(255,255,255,.2)}
+/* ── البطاقات والسطوح ── */
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; margin-bottom:16px; box-shadow:var(--shadow-sm)}
+.tag{display:inline-flex; align-items:center; font-size:.74rem; font-weight:700; padding:4px 12px; border-radius:99px; border:1px solid transparent}
+.tag-ok{background:rgba(70,199,155,.12); color:var(--green); border-color:rgba(70,199,155,.28)}
+.tag-no{background:rgba(233,117,109,.12); color:var(--red); border-color:rgba(233,117,109,.28)}
+.tag-warn{background:rgba(216,178,110,.12); color:var(--gold); border-color:rgba(216,178,110,.28)}
 .muted{color:var(--muted)}
-h1,h2,h3{font-weight:900; line-height:1.4}
-.logo{font-weight:900; font-size:1.25rem}
+/* ── الطباعة — لا letter-spacing إطلاقًا في العربية ── */
+h1,h2,h3{font-weight:700; line-height:1.35}
+.logo{font-weight:700; font-size:1.25rem}
 .logo span{color:var(--brand)}
-.topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
-.progress{height:5px; background:var(--line); border-radius:99px; overflow:hidden; margin:14px 0 26px}
-.progress>div{height:100%; background:linear-gradient(90deg,var(--brand),var(--brand2)); transition:width .4s ease}
-input[type=number]{width:100%; padding:14px 16px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg2); color:var(--ink); font-family:inherit; font-size:1.1rem; font-weight:700}
-input:focus{outline:none; border-color:var(--brand)}
-label.fld{display:block; margin:20px 0 8px; font-weight:800; font-size:1.02rem}
+.topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px}
+/* ── شريط التقدم ── */
+.progress{height:6px; background:rgba(147,161,198,.16); border-radius:99px; overflow:hidden; margin:14px 0 28px}
+.progress>div{height:100%; background:linear-gradient(90deg,var(--brand),var(--brand2)); border-radius:99px; box-shadow:0 0 14px rgba(94,127,230,.45); transition:width 220ms var(--ease)}
+/* ── الحقول ── */
+input[type=number],input[type=text],input[type=email],input[type=password],textarea{width:100%; min-height:52px; padding:13px 16px; border-radius:13px; border:1px solid var(--line); background:var(--bg2); color:var(--ink); font-family:inherit; font-size:1.05rem; font-weight:600;
+  transition:border-color 160ms var(--ease), box-shadow 160ms var(--ease), background 160ms var(--ease)}
+textarea{min-height:88px; resize:vertical; font-weight:500}
+input::placeholder,textarea::placeholder{color:#5F6D95; font-weight:500}
+input:hover,textarea:hover{border-color:rgba(147,161,198,.4)}
+input:focus,textarea:focus{outline:none; border-color:var(--brand); box-shadow:var(--ring); background:#0F1730}
+label.fld{display:block; margin:22px 0 10px; font-weight:700; font-size:1.02rem}
+/* ── الرقائق — اختيارك يُضاء لا يُطبع ── */
 .chips{display:flex; flex-wrap:wrap; gap:10px}
-.chip{padding:10px 18px; border-radius:99px; border:1.5px solid var(--line); background:var(--bg2); color:var(--muted); cursor:pointer; font-weight:700; font-size:.95rem; font-family:inherit; transition:all .15s}
-.chip.selected{background:rgba(79,124,255,.18); border-color:var(--brand); color:var(--ink)}
-.navrow{display:flex; gap:12px; margin-top:30px}
+.chip{display:inline-flex; align-items:center; min-height:44px; padding:10px 18px; border-radius:99px; border:1px solid var(--line); background:var(--bg2); color:var(--muted); cursor:pointer; font-weight:600; font-size:.95rem; font-family:inherit;
+  transition:all 140ms var(--ease)}
+.chip:hover{border-color:rgba(147,161,198,.5); color:var(--ink); transform:translateY(-1px)}
+.chip:active{transform:scale(.96)}
+.chip:focus-visible{outline:none; box-shadow:var(--ring)}
+.chip:disabled{transform:none; cursor:default}
+.chip.selected{background:var(--brand-soft); border-color:var(--brand); color:var(--ink); box-shadow:0 0 0 1px rgba(94,127,230,.22), 0 4px 14px rgba(94,127,230,.14)}
+.navrow{display:flex; gap:12px; margin-top:32px}
 .navrow .btn{flex:1}
-.hero-pct{font-size:3rem; font-weight:900; color:var(--brand); line-height:1}
-.reason{display:flex; gap:12px; padding:14px 0; border-bottom:1px dashed var(--line)}
+/* ── صفحة النتيجة — تقرير استشاري ── */
+.hero-pct{font-size:3.1rem; font-weight:700; line-height:1; color:var(--brand); font-variant-numeric:tabular-nums}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .hero-pct{background:linear-gradient(150deg,#9DB4FF,var(--brand) 70%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent}
+}
+.reason{display:flex; gap:12px; padding:15px 2px; border-bottom:1px solid var(--line-soft)}
 .reason:last-child{border-bottom:none}
-.reason .dot{width:10px; height:10px; border-radius:50%; background:var(--brand); margin-top:10px; flex-shrink:0}
-.src-link{display:flex; align-items:center; gap:10px; padding:13px 16px; background:var(--bg2); border:1px solid var(--line); border-radius:12px; margin-bottom:10px; color:var(--ink); text-decoration:none; font-weight:700; font-size:.95rem; transition:border-color .15s}
-.src-link:hover{border-color:var(--brand)}
-.src-link .arrow{margin-right:auto; color:var(--muted)}
-.alt-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:14px 16px; background:var(--bg2); border:1px solid var(--line); border-radius:14px; margin-bottom:10px}
-.notice{background:rgba(255,179,71,.08); border:1px solid rgba(255,179,71,.35); border-radius:12px; padding:12px 16px; font-size:.85rem; color:var(--amber); margin:14px 0}
-.countdown{background:linear-gradient(135deg,rgba(255,107,107,.12),rgba(255,179,71,.1)); border:1px solid rgba(255,107,107,.35); border-radius:14px; padding:16px 18px; text-align:center; margin-bottom:18px}
-.foot{text-align:center; color:var(--muted); font-size:.78rem; margin-top:44px; line-height:2}
-@media (max-width:560px){ .btn{font-size:.98rem; padding:14px 20px} .card{padding:18px} .hero-pct{font-size:2.4rem} }
-/* ═══ موافقة الخصوصية ═══ */
-.consent{position:fixed; bottom:0; right:0; left:0; background:var(--card); border-top:1px solid var(--line); padding:16px; z-index:60; display:none; box-shadow:0 -8px 30px rgba(0,0,0,.4)}
-.consent.show{display:block}
+.reason .dot{width:9px; height:9px; border-radius:50%; background:var(--brand); margin-top:11px; flex-shrink:0; box-shadow:0 0 10px rgba(94,127,230,.55)}
+.src-link{display:flex; align-items:center; gap:10px; padding:14px 16px; background:var(--bg2); border:1px solid var(--line); border-radius:13px; margin-bottom:10px; color:var(--ink); text-decoration:none; font-weight:600; font-size:.95rem;
+  transition:border-color 160ms var(--ease), transform 160ms var(--ease), box-shadow 160ms var(--ease)}
+.src-link:hover{border-color:var(--brand); transform:translateY(-1px); box-shadow:var(--shadow-sm)}
+.src-link:focus-visible{outline:none; border-color:var(--brand); box-shadow:var(--ring)}
+.src-link .arrow{margin-right:auto; color:var(--muted); transition:transform 160ms var(--ease), color 160ms var(--ease)}
+.src-link:hover .arrow{transform:translateX(-4px); color:var(--brand)}
+.alt-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:15px 16px; background:var(--bg2); border:1px solid var(--line); border-radius:14px; margin-bottom:10px; transition:border-color 160ms var(--ease)}
+.alt-row:hover{border-color:rgba(147,161,198,.4)}
+.notice{background:rgba(216,169,102,.08); border:1px solid rgba(216,169,102,.32); border-radius:13px; padding:13px 16px; font-size:.86rem; color:var(--amber); margin:14px 0}
+.countdown{background:linear-gradient(135deg,rgba(233,117,109,.1),rgba(216,169,102,.09)); border:1px solid rgba(233,117,109,.3); border-radius:15px; padding:17px 18px; text-align:center; margin-bottom:18px; box-shadow:var(--shadow-sm)}
+.share-note,[id="feedback-thanks"]{animation:pop 200ms var(--ease)}
+.foot{text-align:center; color:var(--muted); font-size:.78rem; margin-top:46px; line-height:2}
+/* جدول ولي الأمر (يبنى بالجافاسكربت) */
+.cmp td{padding:13px 10px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+.cmp tr:last-child td{border-bottom:none}
+@media (max-width:560px){ .btn{font-size:.98rem; padding:13px 20px} .card{padding:18px} .hero-pct{font-size:2.5rem} h1{font-size:1.65rem} }
+/* ═══ موافقة الخصوصية — الزجاج الوحيد المسموح ═══ */
+.consent{position:fixed; bottom:0; right:0; left:0; background:rgba(21,30,51,.82); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border-top:1px solid var(--line); padding:16px 16px calc(16px + env(safe-area-inset-bottom)); z-index:60; display:none; box-shadow:0 -12px 32px rgba(3,6,18,.5)}
+.consent.show{display:block; animation:rise 220ms var(--ease)}
 .consent .wrap{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
 .consent p{flex:1; min-width:220px; font-size:.88rem; color:var(--muted)}
 /* ═══ لوحة الإدارة ═══ */
 .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:16px 0}
-.stat{background:var(--bg2); border:1px solid var(--line); border-radius:14px; padding:16px; text-align:center}
-.stat .num{font-size:1.7rem; font-weight:900; color:var(--brand)}
-.stat .lbl{font-size:.78rem; color:var(--muted)}
+.stat{background:var(--bg2); border:1px solid var(--line); border-radius:15px; padding:18px 16px; text-align:center; transition:border-color 160ms var(--ease)}
+.stat:hover{border-color:rgba(147,161,198,.35)}
+.stat .num{font-size:1.75rem; font-weight:700; color:var(--brand); font-variant-numeric:tabular-nums}
+.stat .lbl{font-size:.78rem; color:var(--muted); margin-top:2px}
 table.admin{width:100%; border-collapse:collapse; font-size:.9rem}
-table.admin th,table.admin td{padding:10px 8px; border-bottom:1px solid var(--line); text-align:right}
-table.admin th{color:var(--muted); font-weight:700}
+table.admin th,table.admin td{padding:11px 8px; border-bottom:1px solid var(--line-soft); text-align:right}
+table.admin th{color:var(--muted); font-weight:600}
+table.admin tbody tr{transition:background 140ms var(--ease)}
+table.admin tbody tr:hover{background:rgba(147,161,198,.05)}
 </style>
 </head>
 <body>
@@ -105,7 +164,7 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══════ البداية ═══════ -->
 <section id="s-welcome" class="screen active">
   <div class="wrap" style="text-align:center; padding-top:56px">
-    <div class="logo" style="font-size:1.9rem">قرار<span>ي</span></div>
+    <div class="logo" style="font-size:1.9rem"><span>ق</span>راري</div>
     <h1 style="font-size:1.9rem; margin:26px 0 12px" data-t="w.title" data-t-html>نضيّق خياراتك،<br>ونوضح لك الخطوة الجاية</h1>
     <p class="muted" style="max-width:480px; margin:0 auto 34px; font-size:1.05rem" data-t="w.subtitle">
       جاوب على كم سؤال، ونقارن إجاباتك بشروط القبول والمصادر الرسمية.
@@ -121,7 +180,7 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══════ النموذج (خطوتان) ═══════ -->
 <section id="s-form" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="formTopBack()" data-t="f.topback">← رجوع</button></div>
+    <div class="topbar"><div class="logo"><span>ق</span>راري</div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="formTopBack()" data-t="f.topback">← رجوع</button></div>
     <div class="progress"><div id="formbar" style="width:50%"></div></div>
 
     <!-- خطوة 1: الأرقام -->
@@ -196,7 +255,7 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══════ النتيجة ═══════ -->
 <section id="s-result" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="restart()" data-t="r.toprestart">↺ من جديد</button></div>
+    <div class="topbar"><div class="logo"><span>ق</span>راري</div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="restart()" data-t="r.toprestart">↺ من جديد</button></div>
 
     <div id="deadline-box"></div>
 
@@ -301,7 +360,7 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══════ وضع ولي الأمر ═══════ -->
 <section id="s-parent" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span></div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="go('s-result')" data-t="pt.back">← رجوع للنتيجة</button></div>
+    <div class="topbar"><div class="logo"><span>ق</span>راري</div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="go('s-result')" data-t="pt.back">← رجوع للنتيجة</button></div>
     <h2 style="margin:12px 0 4px" data-t="pt.title">نسخة ولي الأمر 👨‍👩‍👦</h2>
     <p class="muted" style="margin-bottom:16px" data-t="pt.sub">هذا التقرير أداة نقاش عائلي واعٍ — مو قرار نهائي عن ولدكم.</p>
     <div id="parent-report"></div>
@@ -311,7 +370,7 @@ table.admin th{color:var(--muted); font-weight:700}
 <!-- ═══════ لوحة الإدارة (مخفية — #admin) ═══════ -->
 <section id="s-admin" class="screen">
   <div class="wrap">
-    <div class="topbar"><div class="logo">قرار<span>ي</span> · الإدارة</div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="location.hash='';go('s-welcome')">خروج</button></div>
+    <div class="topbar"><div class="logo"><span>ق</span>راري · الإدارة</div><button class="btn btn-ghost" style="padding:8px 16px; font-size:.85rem" onclick="location.hash='';go('s-welcome')">خروج</button></div>
     <div id="admin-gate">
       <div class="card" style="max-width:420px; margin:60px auto; text-align:center">
         <h3 style="margin-bottom:14px">🔐 منطقة الإدارة</h3>
